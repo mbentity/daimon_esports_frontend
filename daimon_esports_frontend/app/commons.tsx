@@ -194,7 +194,7 @@ export const GameTimeline = ({count}:{count: number}) => {
     // using the match component
     const [games, setGames] = useState<any[]>([]);
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games?count="+count)
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/?count="+count)
             .then(response => {
                 console.log(response.data);
                 setGames(response.data);
