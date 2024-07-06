@@ -149,8 +149,8 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
             axios.defaults.headers.common["Authorization"] = "Bearer "+token;
             axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user", {withCredentials: true})
                 .then((res: any) => {
-                    console.log(res.data);
-                    setUser(res.data);
+                    console.log(res.data.id);
+                    setUser(res.data.id);
                     setAuthenticated(true);
                 })
                 .catch(() => {
@@ -159,6 +159,7 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
                 });
         }
         else {
+            console.log("no token");
             setAuthenticated(false);
         }
     }, [authenticated]);
