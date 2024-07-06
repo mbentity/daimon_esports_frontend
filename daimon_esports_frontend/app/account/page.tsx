@@ -61,7 +61,7 @@ export default function Account () {
     const handleChangeName = () => {
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/name",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/name/",
             withCredentials: true,
             data: {
                 name: name
@@ -75,7 +75,7 @@ export default function Account () {
     const handleChangeUsername = () => {
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/username",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/username/",
             withCredentials: true,
             data: {
                 username: username,
@@ -93,7 +93,7 @@ export default function Account () {
         }
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/password",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/password/",
             withCredentials: true,
             data: {
                 password: password,
@@ -108,8 +108,6 @@ export default function Account () {
     return (
         <div>
             <h1>Account</h1>
-            <button onClick={handleLogout}>Logout</button>
-            <button onClick={handleDeleteAccount}>Delete Account</button>
             {<div className="card">
                 <p>Name</p>
                 {!nameChange&&<>
@@ -155,6 +153,8 @@ export default function Account () {
                     <button onClick={handleChangePassword}>Save</button>
                     <button onClick={() => togglePasswordChange(false)}>Cancel</button>
                 </>}
+                <button className="button" onClick={handleLogout}>Logout</button>
+                <button className="button" onClick={handleDeleteAccount}>Delete Account</button>
             </div>}
             <HomeLink/>
         </div>
