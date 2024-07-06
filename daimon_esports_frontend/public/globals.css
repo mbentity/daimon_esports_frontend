@@ -481,3 +481,9 @@ canvas {
     border-radius: 4rem;
     background-color: var(--secondary);
 }
+
+iframe {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}

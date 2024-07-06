@@ -160,3 +160,67 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
 
     return <>{children}</>;
 }
+
+export const TwitchIframe = ({url}:{url: string}) => {
+    // url example: https://www.twitch.tv/lpl or https://www.youtube.com/watch?v=-NLXFfRhVDk
+    // we need to figure out if it's a twitch or youtube link
+    const twitch = url.includes("twitch.tv");
+    const youtube = url.includes("youtube.com");
+    if(twitch) {
+        const channel = url.split("twitch.tv/")[1];
+        return <iframe
+            src={`https://player.twitch.tv/?channel=${channel}&parent=${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}`}
+            height="720"
+            width="1280"
+            allowFullScreen={true}>
+        </iframe>
+    }
+    else if(youtube) {
+        const video = url.split("v=")[1];
+        return <iframe
+            className="center"
+            src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=1`}
+            height="720"
+            width="1280"
+            allow="autoplay; encrypted-media"
+            allowFullScreen={true}>
+        </iframe>
+    }
+}
+
+export const GameTimeline = ({count}:{count: number}) => {
+    // this component is a horizontal header to the page
+    // it fetches from the backend the next N matches and displays them from left to right
+    // using the match component
+    const [games, setGames] = useState<any[]>([]);
+    useEffect(() => {
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games?count="+count)
+            .then(response => {
+                console.log(response.data);
+                setGames(response.data);
+            })
+    }, [count]);
+    return <div>
+        {games.map((game, index) => {
+            return <div key={index}>
+                <Game game={game}/>
+            </div>
+        })}
+    </div>
+}
+
+export const Game = ({game}:{game: any}) => {
+    // this component is a small box that displays a match
+    // it shows the teams, the date and time, and the game
+    return <div>
+        <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
+        <h2>{game.score1} - {game.score2}</h2>
+        <h3><TimeFormat timestamp={game.timestamp}/></h3>
+        <h3>{game.tournament.name}</h3>
+    </div>
+}
+
+export const TimeFormat = ({timestamp}:{timestamp: string}) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+}
