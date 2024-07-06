@@ -194,7 +194,7 @@ export const GameTimeline = ({count}:{count: number}) => {
     // using the match component
     const [games, setGames] = useState<any[]>([]);
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/?count="+count)
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/pop/?count="+count)
             .then(response => {
                 console.log(response.data);
                 setGames(response.data);
@@ -223,4 +223,24 @@ export const Game = ({game}:{game: any}) => {
 export const TimeFormat = ({timestamp}:{timestamp: string}) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
+}
+
+export const SearchBar = () => {
+    const [search, setSearch] = useState<string>("");
+    // this component is a search bar that allows the user to search for tournaments
+    // it has a text input and a submit button
+    // on submit, redirect to the search page
+    return <div>
+        <input type="text" value={search} onChange={e => setSearch(e.target.value)}/>
+        <Link href={"/tournament/search/?query="+search}>Search</Link>
+    </div>
+}
+
+export const TournamentCard = ({tournament}:{tournament: any}) => {
+    // this component is a small box that displays a tournament
+    // it shows the name, the date and time, and the game
+    return <div>
+        <h1>{tournament.name}</h1>
+        <h2>{tournament.discipline.name}</h2>
+    </div>
 }
