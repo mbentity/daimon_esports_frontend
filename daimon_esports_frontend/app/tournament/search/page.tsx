@@ -30,11 +30,22 @@ export default function TournamentSearch () {
             })
     }
 
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <div>
             <h1>Search</h1>
             <div>
-                <input type="text" value={search} onChange={e => setSearch(e.target.value)}/>
+                <input 
+                    type="text" 
+                    value={search} 
+                    onChange={e => setSearch(e.target.value)}
+                    onKeyDown={handleKeyPress} // Add key press handler
+                />
                 <button onClick={handleSearch}>Search</button>
             </div>
             <div>

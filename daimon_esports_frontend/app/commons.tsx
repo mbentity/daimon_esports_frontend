@@ -164,6 +164,7 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
 export const TwitchIframe = ({url}:{url: string}) => {
     // url example: https://www.twitch.tv/lpl or https://www.youtube.com/watch?v=-NLXFfRhVDk
     // we need to figure out if it's a twitch or youtube link
+    if(!url) return (<></>);
     const twitch = url.includes("twitch.tv");
     const youtube = url.includes("youtube.com");
     if(twitch) {
@@ -200,24 +201,44 @@ export const GameTimeline = ({count}:{count: number}) => {
                 setGames(response.data);
             })
     }, [count]);
-    return <div>
+
+    const checkGameInProgress = (game: any) => {
+        return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
+    }
+
+    return <>
+    <div>
         {games.map((game, index) => {
             return <div key={index}>
                 <Game game={game}/>
             </div>
         })}
     </div>
+    <TwitchIframe url={
+        games.find(game => checkGameInProgress(game))?.tournament?.streaming_platform
+    }/>
+    </>
 }
 
 export const Game = ({game}:{game: any}) => {
     // this component is a small box that displays a match
     // it shows the teams, the date and time, and the game
-    return <div>
+    /* return <div>
         <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
         <h2>{game.score1} - {game.score2}</h2>
         <h3><TimeFormat timestamp={game.timestamp}/></h3>
         <h3>{game.tournament.name}</h3>
-    </div>
+    </div> */
+    // the whole component is a link to the game
+    // the tournament name is a link to the tournament
+    return <Link href={"/game/"+game.id}>
+        <div>
+            <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
+            <h2>{game.score1} - {game.score2}</h2>
+            <h3><TimeFormat timestamp={game.timestamp}/></h3>
+            <h3><Link href={"/tournament/"+game.tournament.id}>{game.tournament.name}</Link></h3>
+        </div>
+    </Link>
 }
 
 export const TimeFormat = ({timestamp}:{timestamp: string}) => {
@@ -227,20 +248,38 @@ export const TimeFormat = ({timestamp}:{timestamp: string}) => {
 
 export const SearchBar = () => {
     const [search, setSearch] = useState<string>("");
-    // this component is a search bar that allows the user to search for tournaments
-    // it has a text input and a submit button
-    // on submit, redirect to the search page
-    return <div>
-        <input type="text" value={search} onChange={e => setSearch(e.target.value)}/>
-        <Link href={"/tournament/search/?query="+search}>Search</Link>
-    </div>
-}
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            // Navigate to the search page
+            if (search.trim() !== '') {
+                window.location.href = `/tournament/search/?query=${encodeURIComponent(search)}`;
+            }
+        }
+    };
+
+    return (
+        <div>
+            <input 
+                type="text" 
+                value={search} 
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={handleKeyPress} // Add key press handler
+            />
+            <Link href={`/tournament/search/?query=${encodeURIComponent(search)}`}>
+                Search
+            </Link>
+        </div>
+    );
+};
 
 export const TournamentCard = ({tournament}:{tournament: any}) => {
     // this component is a small box that displays a tournament
     // it shows the name, the date and time, and the game
     return <div>
-        <h1>{tournament.name}</h1>
+        <Link href={"/tournament/"+tournament.id}>
+            <h1>{tournament.name}</h1>
+        </Link>
         <h2>{tournament.discipline.name}</h2>
     </div>
 }

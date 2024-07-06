@@ -16,7 +16,6 @@ export default function Home () {
 		<main>
 			<GameTimeline count={5} />
 			<h1>DAIMON ESPORTS</h1>
-			<TwitchIframe url={"https://www.youtube.com/watch?v=-NLXFfRhVDk"} />
 			{!authenticated&&<Link className="button" href="/account/login">Login</Link>}
 			{authenticated&&<Link className="button" href="/account">Account</Link>}
 			<SearchBar />
