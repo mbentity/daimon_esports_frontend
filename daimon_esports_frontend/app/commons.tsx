@@ -149,7 +149,6 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
             axios.defaults.headers.common["Authorization"] = "Bearer "+token;
             axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user", {withCredentials: true})
                 .then((res: any) => {
-                    console.log(res.data.id);
                     setUser(res.data.id);
                     setAuthenticated(true);
                 })
@@ -159,7 +158,6 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
                 });
         }
         else {
-            console.log("no token");
             setAuthenticated(false);
         }
     }, [authenticated]);
@@ -168,8 +166,6 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
 }
 
 export const TwitchIframe = ({url}:{url: string}) => {
-    // url example: https://www.twitch.tv/lpl or https://www.youtube.com/watch?v=-NLXFfRhVDk
-    // we need to figure out if it's a twitch or youtube link
     if(!url) return (<></>);
     const twitch = url.includes("twitch.tv");
     const youtube = url.includes("youtube.com");
@@ -196,14 +192,10 @@ export const TwitchIframe = ({url}:{url: string}) => {
 }
 
 export const GameTimeline = ({count}:{count: number}) => {
-    // this component is a horizontal header to the page
-    // it fetches from the backend the next N matches and displays them from left to right
-    // using the match component
     const [games, setGames] = useState<any[]>([]);
     useEffect(() => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/pop/?count="+count)
             .then(response => {
-                console.log(response.data);
                 setGames(response.data);
             })
     }, [count]);
@@ -227,16 +219,6 @@ export const GameTimeline = ({count}:{count: number}) => {
 }
 
 export const Game = ({game}:{game: any}) => {
-    // this component is a small box that displays a match
-    // it shows the teams, the date and time, and the game
-    /* return <div>
-        <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
-        <h2>{game.score1} - {game.score2}</h2>
-        <h3><TimeFormat timestamp={game.timestamp}/></h3>
-        <h3>{game.tournament.name}</h3>
-    </div> */
-    // the whole component is a link to the game
-    // the tournament name is a link to the tournament
     return <Link href={"/game/"+game.id}>
         <div>
             <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
@@ -257,7 +239,6 @@ export const SearchBar = () => {
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            // Navigate to the search page
             if (search.trim() !== '') {
                 window.location.href = `/tournament/search/?query=${encodeURIComponent(search)}`;
             }
@@ -270,7 +251,7 @@ export const SearchBar = () => {
                 type="text" 
                 value={search} 
                 onChange={e => setSearch(e.target.value)}
-                onKeyDown={handleKeyPress} // Add key press handler
+                onKeyDown={handleKeyPress}
             />
             <Link href={`/tournament/search/?query=${encodeURIComponent(search)}`}>
                 Search
@@ -280,8 +261,6 @@ export const SearchBar = () => {
 };
 
 export const TournamentCard = ({tournament}:{tournament: any}) => {
-    // this component is a small box that displays a tournament
-    // it shows the name, the date and time, and the game
     return <div>
         <Link href={"/tournament/"+tournament.id}>
             <h1>{tournament.name}</h1>

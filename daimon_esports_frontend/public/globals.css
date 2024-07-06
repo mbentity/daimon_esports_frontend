@@ -337,7 +337,6 @@ td {
     font-weight: bold;
 }
 
-/* The switch - the box around the slider */
 .switch {
     position: relative;
     width: 4rem;
@@ -346,14 +345,12 @@ td {
     margin: 1rem;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
 opacity: 0;
 width: 0;
 height: 0;
 }
 
-/* The slider */
 .slider {
 position: absolute;
 cursor: pointer;
@@ -392,7 +389,6 @@ input:checked + .slider:before {
 transform: translateX(2rem);
 }
 
-/* Rounded sliders */
 .slider.round {
 border-radius: 2rem;
 }

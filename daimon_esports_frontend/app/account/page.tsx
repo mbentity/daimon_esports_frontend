@@ -15,16 +15,9 @@ export default function Account () {
     }, [authenticated]);
 
     const handleLogout = () => {
-        // Remove token from localStorage
         localStorage.removeItem("token");
-
-        // Clear user state
         setUser("");
-
-        // Reset authenticated state
         setAuthenticated(false);
-
-        // Redirect to login page or any other page after logout
         location.href = "/account/login";
     };
 

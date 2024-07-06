@@ -3,13 +3,12 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useGlobalContext } from "./Context/store";
-import { GameTimeline, SearchBar, TwitchIframe } from "./commons";
+import { GameTimeline, SearchBar } from "./commons";
 
 export default function Home () {
 	const { authenticated } = useGlobalContext();
 
 	useEffect(() => {
-		console.log(authenticated)
 	}, [authenticated])
 
 	return (

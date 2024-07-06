@@ -1,13 +1,13 @@
 "use client"
 
-import { HomeLink, SearchBar, TournamentCard } from "@/app/commons";
+import { HomeLink, TournamentCard } from "@/app/commons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function TournamentSearch () {
     const [search, setSearch] = useState<string>("");
     const [tournaments, setTournaments] = useState<any[]>([]);
-    const [sort, setSort] = useState<sortType>({id: "games_start", display: "Tournament Start"}); // Default sort by "games_start
+    const [sort, setSort] = useState<sortType>({id: "games_start", display: "Tournament Start"});
     const [completed, setCompleted] = useState<string>("");
     const [closed, setClosed] = useState<string>("");
     const [ascendant, setAscendant] = useState<boolean>(true);
@@ -56,7 +56,7 @@ export default function TournamentSearch () {
                     type="text" 
                     value={search} 
                     onChange={e => setSearch(e.target.value)}
-                    onKeyDown={handleKeyPress} // Add key press handler
+                    onKeyDown={handleKeyPress}
                 />
                 <select 
                     value={sort.id}
