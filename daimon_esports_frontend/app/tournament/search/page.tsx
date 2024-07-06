@@ -7,8 +7,9 @@ import axios from "axios";
 export default function TournamentSearch () {
     const [search, setSearch] = useState<string>("");
     const [tournaments, setTournaments] = useState<any[]>([]);
-    const [sort, setSort] = useState<sortType>({id: "", display: ""});
-    const [filter, setFilter] = useState<boolean>(false);
+    const [sort, setSort] = useState<sortType>({id: "games_start", display: "Tournament Start"}); // Default sort by "games_start
+    const [completed, setCompleted] = useState<string>("");
+    const [closed, setClosed] = useState<string>("");
     const [ascendant, setAscendant] = useState<boolean>(true);
 
     type sortType = {
@@ -23,17 +24,20 @@ export default function TournamentSearch () {
             setSearch(search);
             axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search)
                 .then(response => {
-                    console.log(response.data);
                     setTournaments(response.data);
                 })
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, []);
 
+    useEffect(() => {
+        handleSearch();
+    }
+    , [completed, closed]);
+
     const handleSearch = () => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+"&ordering="+(ascendant?"":"-")+sort.id+(filter?"":"&completed=false"))
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+completed+closed)
             .then(response => {
-                console.log(response.data);
                 setTournaments(response.data);
             })
     }
@@ -58,28 +62,49 @@ export default function TournamentSearch () {
                     value={sort.id}
                     onChange={e => setSort({id: e.target.value, display: e.target.selectedOptions[0].text})}
                 >
-                    <option value="">sort by</option>
                     <option value="games_start">Tournament Start</option>
                     <option value="games_stop">Tournament End</option>
                     <option value="sub_start">Subscriptions Start</option>
                     <option value="sub_stop">Subscriptions End</option>
                 </select>
-                <label>Ascendant</label>
-                <input 
-                    type="checkbox" 
-                    checked={ascendant}
-                    onChange={e => setAscendant(e.target.checked)}
-                />
-                <label>Include Completed Tournaments</label>
-                <input 
-                    type="checkbox" 
-                    checked={filter} 
-                    onChange={e => setFilter(e.target.checked)}
-                />
+                <select
+                    value={ascendant.toString()}
+                    onChange={e => setAscendant(e.target.value==="true")}
+                >
+                    <option value="true">Ascendant</option>
+                    <option value="false">Descendant</option>
+                </select>
+                <select
+                    value={completed}
+                    onChange={e => setCompleted(e.target.value)}
+                >
+                    <option value="">Completed?</option>
+                    <option value="&completed=true">Completed</option>
+                    <option value="&completed=false">Not Completed</option>
+                </select>
+                <select
+                    value={closed}
+                    onChange={e => setClosed(e.target.value)}
+                >
+                    <option value="">Closed?</option>
+                    <option value="&closed=true">Closed</option>
+                    <option value="&closed=false">Not Closed</option>
+                </select>
                 <button onClick={handleSearch}>Search</button>
             </div>
             {tournaments.length?<div>
-                {tournaments.map(tournament => {
+                {tournaments.sort((a, b) => {
+                    if(sort.id) {
+                        if(ascendant) {
+                            return new Date(a[sort.id]).getTime() - new Date(b[sort.id]).getTime();
+                        }
+                        else {
+                            return new Date(b[sort.id]).getTime() - new Date(a[sort.id]).getTime();
+                        }
+                    }
+                    return 0;
+                })
+                .map(tournament => {
                     return (
                         <TournamentCard key={tournament.id} tournament={tournament}/>
                     );
