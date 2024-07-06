@@ -140,11 +140,13 @@ export const Character = ({id}:{id: string}) => {
 }
 
 export const AuthHandler = ({children}:{children: React.ReactNode}) => {
-    const { authenticated, setAuthenticated } = useGlobalContext();
-    const { setUser } = useGlobalContext();
+    const { authenticated, setAuthenticated, setUser } = useGlobalContext();
 
     useEffect(() => {
-        if(authenticated === null) {
+        const token = localStorage.getItem("token");
+
+        if(token) {
+            axios.defaults.headers.common["Authorization"] = "Bearer "+token;
             axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user", {withCredentials: true})
                 .then((res: any) => {
                     console.log(res.data);
@@ -155,6 +157,9 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
                     setUser("");
                     setAuthenticated(false);
                 });
+        }
+        else {
+            setAuthenticated(false);
         }
     }, [authenticated]);
 
