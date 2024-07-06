@@ -8,7 +8,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     const [team, setTeam] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/rosters/"+params.team)
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team)
             .then(response => {
                 setTeam(response.data);
             })

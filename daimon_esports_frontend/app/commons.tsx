@@ -221,7 +221,7 @@ export const GameTimeline = ({count}:{count: number}) => {
 export const Game = ({game}:{game: any}) => {
     return <Link href={"/game/"+game.id}>
         <div>
-            <h1>{game.roster1.tag} vs {game.roster2.tag}</h1>
+            <h1>{game.team1.tag} vs {game.team2.tag}</h1>
             <h2>{game.score1} - {game.score2}</h2>
             <h3><TimeFormat timestamp={game.timestamp}/></h3>
             <h3><Link href={"/tournament/"+game.tournament.id}>{game.tournament.name}</Link></h3>

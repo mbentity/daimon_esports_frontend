@@ -11,7 +11,7 @@ export default function AccountRegister () {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [display, setDisplay] = useState<string>("");
+    const [name, setName] = useState<string>("");
     
     useEffect(() => {
         if(authenticated) {
@@ -29,7 +29,7 @@ export default function AccountRegister () {
             data: {
                 username: username,
                 password: password,
-                display: display
+                name: name
             },
             withCredentials: true
         })
@@ -60,9 +60,9 @@ export default function AccountRegister () {
                 <div className="formtab">
                     <input className="form"
                     type="text"
-                    placeholder="display name"
-                    value={display}
-                    onChange={(e) => setDisplay(e.target.value)}
+                    placeholder="name name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     />
                     <input className="form"
                     type="text"

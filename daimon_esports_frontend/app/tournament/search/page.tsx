@@ -7,14 +7,14 @@ import axios from "axios";
 export default function TournamentSearch () {
     const [search, setSearch] = useState<string>("");
     const [tournaments, setTournaments] = useState<any[]>([]);
-    const [sort, setSort] = useState<sortType>({id: "games_start", display: "Tournament Start"});
+    const [sort, setSort] = useState<sortType>({id: "games_start", name: "Tournament Start"});
     const [completed, setCompleted] = useState<string>("");
     const [closed, setClosed] = useState<string>("");
     const [ascendant, setAscendant] = useState<boolean>(true);
 
     type sortType = {
         id: string,
-        display: string
+        name: string
     }
 
     useEffect(() => {
@@ -60,7 +60,7 @@ export default function TournamentSearch () {
                 />
                 <select 
                     value={sort.id}
-                    onChange={e => setSort({id: e.target.value, display: e.target.selectedOptions[0].text})}
+                    onChange={e => setSort({id: e.target.value, name: e.target.selectedOptions[0].text})}
                 >
                     <option value="games_start">Tournament Start</option>
                     <option value="games_stop">Tournament End</option>

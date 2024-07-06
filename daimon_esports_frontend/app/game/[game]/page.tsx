@@ -17,7 +17,7 @@ export default function GamePage ({ params }: { params: { game: string } }) {
     return (
         <div>
             <h1>Game</h1>
-            <h2>{game?.roster1.name} vs {game?.roster2.name}</h2>
+            <h2>{game?.team1.name} vs {game?.team2.name}</h2>
             <HomeLink/>
         </div>
     );
