@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 export default function TournamentPage ({ params }: { params: { tournament: string } }) {
     const [tournament, setTournament] = useState<any>(null);
+    const [userData, setUserData] = useState<any>();
 
     useEffect(() => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)

@@ -1,12 +1,49 @@
 "use client"
 
 import { HomeLink } from "@/app/commons";
+import { useGlobalContext } from "@/app/Context/store";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 
 export default function AccountTournaments () {
+    const [ tournaments, setTournaments ] = useState<any[]>([]);
+    const { authenticated } = useGlobalContext();
+
+    useEffect(() => {
+        if(authenticated===false) {
+            location.href = "/account/login";
+        }
+    }, [authenticated]);
+
+    useEffect(() => {
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/tournaments/",
+            withCredentials: true
+        })
+            .then((res) => {
+                console.log(res.data);
+                setTournaments(res.data);
+            }
+        );
+    }, []);
 
     return (
         <div>
             <h1>Your Tournaments</h1>
+            <ul>
+                {tournaments.map((tournament) => (
+                    <li key={tournament.id}>
+                        <Link href={`/tournament/${tournament.id}`}>
+                            {tournament.name}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+            <Link href="/tournament/create">
+                Create Tournament
+            </Link>
             <HomeLink/>
         </div>
     );

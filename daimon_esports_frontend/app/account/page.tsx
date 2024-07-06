@@ -4,9 +4,10 @@ import { HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 export default function Account () {
-    const { user, setUser, authenticated, setAuthenticated } = useGlobalContext();
+    const { setUser, authenticated, setAuthenticated } = useGlobalContext();
     const [userData, setUserData] = useState<any>();
 
     const [name, setName] = useState<string>("");
@@ -27,7 +28,6 @@ export default function Account () {
     }, [authenticated]);
 
     useEffect(() => {
-        // fetch user data
         axios({
             method: "get",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/",
@@ -155,6 +155,7 @@ export default function Account () {
                 </>}
                 <button className="button" onClick={handleLogout}>Logout</button>
                 <button className="button" onClick={handleDeleteAccount}>Delete Account</button>
+                {userData?.organizer?<Link href="/account/tournaments"><button className="button">Your Tournaments</button></Link>:<></>}
             </div>}
             <HomeLink/>
         </div>
