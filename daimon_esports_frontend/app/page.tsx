@@ -13,11 +13,11 @@ export default function Home () {
 
 	return (
 		<main>
-			<GameTimeline count={5} />
 			<h1>DAIMON ESPORTS</h1>
-			{!authenticated&&<Link className="button" href="/account/login">Login</Link>}
-			{authenticated&&<Link className="button" href="/account">Account</Link>}
-			<SearchBar />
+			<GameTimeline count={5} />
+			{!authenticated&&<Link className="accountbutton" href="/account/login">Login</Link>}
+			{authenticated&&<Link className="accountbutton" href="/account">Account</Link>}
+			<SearchBar/>
 		</main>
 	);
 }

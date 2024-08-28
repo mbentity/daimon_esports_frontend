@@ -60,7 +60,7 @@ export default function AccountRegister () {
                 <div className="formtab">
                     <input className="form"
                     type="text"
-                    placeholder="name name"
+                    placeholder="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     />

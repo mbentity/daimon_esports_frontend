@@ -51,7 +51,7 @@ export default function TournamentSearch () {
     return (
         <div>
             <h1>Search</h1>
-            <div>
+            <div className="searchbar">
                 <input 
                     type="text" 
                     value={search} 
@@ -109,7 +109,7 @@ export default function TournamentSearch () {
                         <TournamentCard key={tournament.id} tournament={tournament}/>
                     );
                 })}
-            </div>:<p>No Tournaments Found</p>}
+            </div>:<p className="card">No Tournaments Found</p>}
             <HomeLink/>
         </div>
     );

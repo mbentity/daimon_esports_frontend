@@ -34,15 +34,15 @@ export default function AccountTournaments () {
             <h1>Your Tournaments</h1>
             <ul>
                 {tournaments.map((tournament) => (
-                    <li key={tournament.id}>
+                    <div className="card" key={tournament.id}>
                         <Link href={`/tournament/${tournament.id}`}>
-                            {tournament.name}
+                            <button>{tournament.name}</button>
                         </Link>
-                    </li>
+                    </div>
                 ))}
             </ul>
             <Link href="/tournament/create">
-                Create Tournament
+                <button className="button">Create Tournament</button>
             </Link>
             <HomeLink/>
         </div>

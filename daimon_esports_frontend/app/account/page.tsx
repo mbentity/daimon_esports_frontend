@@ -156,6 +156,7 @@ export default function Account () {
                 <button className="button" onClick={handleLogout}>Logout</button>
                 <button className="button" onClick={handleDeleteAccount}>Delete Account</button>
                 {userData?.organizer?<Link href="/account/tournaments"><button className="button">Your Tournaments</button></Link>:<></>}
+                <Link href="/account/teams"><button className="button">Your Teams</button></Link>
             </div>}
             <HomeLink/>
         </div>

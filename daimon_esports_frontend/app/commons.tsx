@@ -201,6 +201,9 @@ export const GameTimeline = ({count}:{count: number}) => {
     }, [count]);
 
     const checkGameInProgress = (game: any) => {
+        if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
+            console.log("a game is in progress");
+        }
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
 
@@ -218,6 +221,29 @@ export const GameTimeline = ({count}:{count: number}) => {
     </>
 }
 
+export const TournamentGameTimeline = ({games}:{games: any}) => {
+
+    const checkGameInProgress = (game: any) => {
+        if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
+            console.log("a game is in progress");
+        }
+        return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
+    }
+
+    return <>
+    <div>
+        {games.map((game: any, index: any) => {
+            return <div key={index}>
+                <TournamentGame game={game}/>
+            </div>
+        })}
+    </div>
+    <TwitchIframe url={
+        games.find((game: any) => checkGameInProgress(game))?.tournament?.streaming_platform
+    }/>
+    </>
+}
+
 export const Game = ({game}:{game: any}) => {
     return <Link href={"/game/"+game.id}>
         <div>
@@ -225,6 +251,16 @@ export const Game = ({game}:{game: any}) => {
             <h2>{game.score1} - {game.score2}</h2>
             <h3><TimeFormat timestamp={game.timestamp}/></h3>
             <h3><Link href={"/tournament/"+game.tournament.id}>{game.tournament.name}</Link></h3>
+        </div>
+    </Link>
+}
+
+export const TournamentGame = ({game}:{game: any}) => {
+    return <Link href={"/game/"+game.id}>
+        <div>
+            <h1>{game.team1.tag} vs {game.team2.tag}</h1>
+            <h2>{game.score1} - {game.score2}</h2>
+            <h3><TimeFormat timestamp={game.timestamp}/></h3>
         </div>
     </Link>
 }
@@ -245,15 +281,27 @@ export const SearchBar = () => {
         }
     };
 
+    // disable autocomplete and autocorrect
+
+    const input = document.getElementById("search");
+    if(input) {
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+    }
+
     return (
-        <div>
+        <div className="inputbox">
             <input 
+                id="search"
+                className="input"
                 type="text" 
                 value={search} 
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={handleKeyPress}
             />
-            <Link href={`/tournament/search/?query=${encodeURIComponent(search)}`}>
+            <Link className="inputbutton" href={`/tournament/search/?query=${encodeURIComponent(search)}`}>
                 Search
             </Link>
         </div>
@@ -261,10 +309,16 @@ export const SearchBar = () => {
 };
 
 export const TournamentCard = ({tournament}:{tournament: any}) => {
-    return <div>
+    return <div className="card">
         <Link href={"/tournament/"+tournament.id}>
             <h1>{tournament.name}</h1>
         </Link>
         <h2>{tournament.discipline.name}</h2>
     </div>
+}
+
+export const formatDate = (date: string) => {
+    // example date: 2024-07-14T18:56:52+02:00
+    const d = new Date(date);
+    return d.toLocaleString();
 }

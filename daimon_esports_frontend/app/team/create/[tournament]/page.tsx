@@ -4,7 +4,7 @@ import { HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import { useEffect } from "react";
 
-export default function TeamCreate () {
+export default function TeamCreate ({ params }: { params: { tournament: string } }) {
     const { authenticated } = useGlobalContext();
 
     useEffect(() => {

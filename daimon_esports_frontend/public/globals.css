@@ -135,7 +135,7 @@ td {
 }
 
 .card {
-    background-color: var(--tertiary);
+    background-color: var(--secondary);
     border: 0.5rem solid var(--quaternary);
     border-radius: 1rem;
     padding: 1rem;
@@ -143,6 +143,10 @@ td {
     margin: auto;
     margin-top: 2rem;
     position: relative;
+}
+
+.card h1 {
+    color: var(--primary);
 }
 
 .card img {
@@ -395,6 +399,88 @@ border-radius: 2rem;
 
 .slider.round:before {
 border-radius: 2rem;
+}
+
+.input {
+    display: inline-block;
+    margin: 0.5vh;
+    height: 1vh;
+    border-radius: 2.5vh;
+    padding: 2vh;
+    width: 40vh;
+    font-size: 3vh;
+    font-family: var(--font);
+}
+
+.inputbutton {
+    display: inline-block;
+    margin: 0.5vh;
+    border-radius: 2.5vh;
+    padding: 1vh;
+    font-size: 3vh;
+    font-family: var(--font);
+    cursor: pointer;
+    background-color: var(--quinary);
+    color: var(--primary);
+}
+
+.inputbox {
+    display: block;
+    position: absolute;
+    top: 2vh;
+    right: 2vh;
+}
+
+.searchbar {
+    display: block;
+    margin: 2vh;
+    margin-bottom: 20vh;
+}
+
+.searchbar button {
+    display: inline-block;
+    padding: 1vh;
+    font-size: 3vh;
+    font-family: var(--font);
+    cursor: pointer;
+    background-color: var(--quinary);
+    color: var(--primary);
+}
+
+.searchbar select {
+    display: inline-block;
+    padding: 1vh;
+    font-size: 3vh;
+    font-family: var(--font);
+    cursor: pointer;
+    background-color: var(--quinary);
+    color: var(--primary);
+}
+
+.searchbar input {
+    display: inline-block;
+    padding: 1vh;
+    font-size: 3vh;
+    font-family: var(--font);
+    color: var(--primary);
+}
+
+.accountbutton {
+    display: block;
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    margin: 0.5vh;
+    border-radius: 2.5vh;
+    padding: 2vh;
+    font-size: 3vh;
+    font-weight: bold;
+    width: 20vh;
+    text-align: center;
+    font-family: var(--font);
+    cursor: pointer;
+    background-color: var(--quinary);
+    color: var(--primary);
 }
 
 .gui {
