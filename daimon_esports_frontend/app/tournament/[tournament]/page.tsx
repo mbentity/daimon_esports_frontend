@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 
 export default function TournamentPage ({ params }: { params: { tournament: string } }) {
 	const { authenticated } = useGlobalContext();
+    const [canCreate, setCanCreate] = useState<boolean>(false);
 
 	useEffect(() => {
 	}, [authenticated])
@@ -16,14 +17,43 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
     useEffect(() => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)
             .then(response => {
-                console.log(response.data);
                 setTournament(response.data);
+            });
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cancreateteam")
+            .then(response => {
+                setCanCreate(response.data);
+            })
+            .catch((error: any) => {
             })
     }, []);
 
+    const calculateStandings = (matches: any, teams: any) => {
+        let standings: any = [];
+        // populate standings with {team: team id, wins: 0, losses: 0}
+        teams.forEach((team: any) => {
+            standings.push({team: team.id, wins: 0, losses: 0});
+        });
+        // update standings with match results
+        matches.forEach((match: any) => {
+            // if match is still in progress, skip
+            if(new Date(match.timestamp).getTime()+match.minutes*60000>new Date().getTime()) {
+                return;
+            }
+            if(match.score1>match.score2) {
+                standings.find((standing: any) => standing.team===match.team1.id).wins++;
+                standings.find((standing: any) => standing.team===match.team2.id).losses++;
+            } else if(match.score1<match.score2) {
+                standings.find((standing: any) => standing.team===match.team2.id).wins++;
+                standings.find((standing: any) => standing.team===match.team1.id).losses++;
+            }
+        });
+        // sort standings by wins
+        standings.sort((a: any, b: any) => b.wins-a.wins);
+        return standings;
+    }
+
     const checkGameInProgress = (game: any) => {
         if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-            console.log("a game is in progress");
         }
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
@@ -35,22 +65,26 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
             <div className="card">
                 <p>Organizer: {tournament?.user?.name}</p>
                 <p>Discipline: {tournament?.discipline?.name}</p>
-            </div>
-            <div className="card">
                 <p>Start: {formatDate(tournament?.games_start)}</p>
                 <p>End: {formatDate(tournament?.games_stop)}</p>
                 <p>Subscriptions open: {formatDate(tournament?.sub_start)}</p>
                 <p>Subscriptions close: {formatDate(tournament?.sub_stop)}</p>
+                <p>Format: {tournament?.team_count} teams of {tournament?.player_count} players each</p>
             </div>
             <div className="card">
-                <p>Format: {tournament?.team_count} teams of {tournament?.player_count} players each</p>
-                <p>Teams:</p>
+                <h1>Standings</h1>
                 <ul>
-                    {tournament?.teams.map((team: any) => <li key={team.id}><Link href={"/team/"+team.id}><button>{team.name}</button></Link></li>)}
+                    {tournament && calculateStandings(tournament?.games, tournament?.teams).map((standing: any) => {
+                        return (
+                            <li key={standing.team}>
+                                <Link href={"/team/"+tournament?.teams.find((team: any) => team.id===standing.team).id}><button>{tournament?.teams.find((team: any) => team.id===standing.team).name}</button></Link>
+                                <p>Wins: {standing.wins}</p>
+                                <p>Losses: {standing.losses}</p>
+                            </li>
+                        );
+                    })}
                 </ul>
-                {authenticated && <Link href={"/team/create/"+tournament?.id}><button>Create a team</button></Link>}
             </div>
-            
             <HomeLink/>
         </div>
     );

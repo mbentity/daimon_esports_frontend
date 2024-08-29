@@ -34,10 +34,10 @@ export default function Account () {
             withCredentials: true
         })
             .then((res) => {
-                console.log(res.data);
                 setUserData(res.data);
-            }
-        );
+            })
+            .catch(() => {
+            });
     }, [nameChange, usernameChange, passwordChange]);
 
     const handleLogout = () => {
@@ -157,6 +157,7 @@ export default function Account () {
                 <button className="button" onClick={handleDeleteAccount}>Delete Account</button>
                 {userData?.organizer?<Link href="/account/tournaments"><button className="button">Your Tournaments</button></Link>:<></>}
                 <Link href="/account/teams"><button className="button">Your Teams</button></Link>
+                <Link href="/account/inbox"><button className="button">Inbox</button></Link>
             </div>}
             <HomeLink/>
         </div>

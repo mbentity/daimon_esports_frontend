@@ -23,7 +23,6 @@ export default function AccountTournaments () {
             withCredentials: true
         })
             .then((res) => {
-                console.log(res.data);
                 setTournaments(res.data);
             }
         );

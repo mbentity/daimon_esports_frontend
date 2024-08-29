@@ -23,7 +23,6 @@ export default function AccountTeams () {
             withCredentials: true
         })
             .then((res) => {
-                console.log(res.data);
                 setTeams(res.data);
             }
         );
@@ -33,6 +32,7 @@ export default function AccountTeams () {
         <div>
             <h1>Your Teams</h1>
             <ul>
+                {teams.length===0 && <h2>You are not a member of any team.</h2>}
                 {teams.map((team) => (
                     <div className="card" key={team.id}>
                         <Link href={`/team/${team.id}`}>
@@ -40,6 +40,7 @@ export default function AccountTeams () {
                         </Link>
                     </div>
                 ))}
+                <Link className="button" href="/tournament/search/">Browse tournaments</Link>
             </ul>
             <HomeLink/>
         </div>

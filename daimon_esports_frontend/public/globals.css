@@ -44,6 +44,8 @@ body {
     font-family: var(--font);
     background-color: var(--primary);
     color: var(--quaternary);
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
@@ -225,6 +227,10 @@ td {
     text-align: center;
 }
 
+.topmargin {
+    margin: 2rem;
+}
+
 .plus {
     border-radius: 50%;
     width: 4rem;
@@ -403,7 +409,6 @@ border-radius: 2rem;
 
 .input {
     display: inline-block;
-    margin: 0.5vh;
     height: 1vh;
     border-radius: 2.5vh;
     padding: 2vh;
@@ -414,7 +419,7 @@ border-radius: 2rem;
 
 .inputbutton {
     display: inline-block;
-    margin: 0.5vh;
+    margin-left: 2vh;
     border-radius: 2.5vh;
     padding: 1vh;
     font-size: 3vh;
@@ -424,11 +429,48 @@ border-radius: 2rem;
     color: var(--primary);
 }
 
-.inputbox {
-    display: block;
+.header {
+    background-color: var(--secondary);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header p {
+    order: 2;
+    flex-grow: 1;
     position: absolute;
-    top: 2vh;
-    right: 2vh;
+    z-index: 1;
+    font-size: 5vh;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    top: 1vh;
+}
+
+.inputbox {
+    z-index: 2;
+    order: 3;
+    display: flex;
+    margin: 2vh;
+}
+
+.accountbutton {
+    order: 1;
+    z-index: 2;
+    margin: 2vh;
+    border-radius: 2.5vh;
+    padding: 2vh 5vh;
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+    font-family: var(--font);
+    cursor: pointer;
+    background-color: var(--quinary);
+    color: var(--primary);
 }
 
 .searchbar {
@@ -462,24 +504,6 @@ border-radius: 2rem;
     padding: 1vh;
     font-size: 3vh;
     font-family: var(--font);
-    color: var(--primary);
-}
-
-.accountbutton {
-    display: block;
-    position: absolute;
-    top: 2vh;
-    left: 2vh;
-    margin: 0.5vh;
-    border-radius: 2.5vh;
-    padding: 2vh;
-    font-size: 3vh;
-    font-weight: bold;
-    width: 20vh;
-    text-align: center;
-    font-family: var(--font);
-    cursor: pointer;
-    background-color: var(--quinary);
     color: var(--primary);
 }
 
@@ -568,4 +592,38 @@ iframe {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.games {
+    background-color: var(--tertiary);
+    width: 100%;
+    display: flex;
+    min-height: min-content;
+    overflow-x: auto;
+}
+
+.game {
+    width: 50vh;
+    padding: 2vh;
+    transition: 0.1s;
+    flex: 1;
+}
+
+.game:hover {
+    background-color: var(--secondary);
+}
+
+.game p {
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+    color: var(--primary);
+}
+
+.gamelink {
+    transition: 0.1s;
+}
+
+.gamelink:hover {
+    color: var(--tertiary);
 }

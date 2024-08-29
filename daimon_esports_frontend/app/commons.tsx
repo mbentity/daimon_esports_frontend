@@ -181,7 +181,7 @@ export const TwitchIframe = ({url}:{url: string}) => {
     else if(youtube) {
         const video = url.split("v=")[1];
         return <iframe
-            className="center"
+            className="center topmargin"
             src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=1`}
             height="720"
             width="1280"
@@ -194,7 +194,7 @@ export const TwitchIframe = ({url}:{url: string}) => {
 export const GameTimeline = ({count}:{count: number}) => {
     const [games, setGames] = useState<any[]>([]);
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/pop/?count="+count)
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/")
             .then(response => {
                 setGames(response.data);
             })
@@ -202,42 +202,38 @@ export const GameTimeline = ({count}:{count: number}) => {
 
     const checkGameInProgress = (game: any) => {
         if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-            console.log("a game is in progress");
         }
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
 
     return <>
-    <div>
-        {games.map((game, index) => {
+    <Games games={games}/>
+    <TwitchIframe url={
+        games.find((game: any) => checkGameInProgress(game))?.tournament?.streaming_platform
+    }/>
+    </>
+}
+
+export const Games = ({games}:{games: any}) => {
+    return <div className="games">
+        {games.map((game: any, index: any) => {
             return <div key={index}>
                 <Game game={game}/>
             </div>
         })}
     </div>
-    <TwitchIframe url={
-        games.find(game => checkGameInProgress(game))?.tournament?.streaming_platform
-    }/>
-    </>
 }
 
 export const TournamentGameTimeline = ({games}:{games: any}) => {
 
     const checkGameInProgress = (game: any) => {
         if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-            console.log("a game is in progress");
         }
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
 
     return <>
-    <div>
-        {games.map((game: any, index: any) => {
-            return <div key={index}>
-                <TournamentGame game={game}/>
-            </div>
-        })}
-    </div>
+    <Games games={games}/>
     <TwitchIframe url={
         games.find((game: any) => checkGameInProgress(game))?.tournament?.streaming_platform
     }/>
@@ -246,11 +242,11 @@ export const TournamentGameTimeline = ({games}:{games: any}) => {
 
 export const Game = ({game}:{game: any}) => {
     return <Link href={"/game/"+game.id}>
-        <div>
-            <h1>{game.team1.tag} vs {game.team2.tag}</h1>
-            <h2>{game.score1} - {game.score2}</h2>
-            <h3><TimeFormat timestamp={game.timestamp}/></h3>
-            <h3><Link href={"/tournament/"+game.tournament.id}>{game.tournament.name}</Link></h3>
+        <div className="game">
+            <p>{game.team1.tag} vs {game.team2.tag}</p>
+            <p>{game.score1} - {game.score2}</p>
+            <p><TimeFormat timestamp={game.timestamp}/></p>
+            <Link href={"/tournament/"+game.tournament.id}><p className="gamelink">{game.tournament.name}</p></Link>
         </div>
     </Link>
 }
@@ -283,13 +279,16 @@ export const SearchBar = () => {
 
     // disable autocomplete and autocorrect
 
-    const input = document.getElementById("search");
-    if(input) {
-        input.setAttribute("autocomplete", "off");
-        input.setAttribute("autocorrect", "off");
-        input.setAttribute("autocapitalize", "off");
-        input.setAttribute("spellcheck", "false");
-    }
+    useEffect(() => {
+        if (typeof document === 'undefined') return
+        const input = document.getElementById("search");
+        if(input) {
+            input.setAttribute("autocomplete", "off");
+            input.setAttribute("autocorrect", "off");
+            input.setAttribute("autocapitalize", "off");
+            input.setAttribute("spellcheck", "false");
+        }
+    }, []);
 
     return (
         <div className="inputbox">

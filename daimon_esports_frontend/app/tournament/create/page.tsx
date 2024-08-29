@@ -32,25 +32,12 @@ export default function TournamentCreate () {
             withCredentials: true
         })
             .then((res) => {
-                console.log(res.data);
                 setDisciplines(res.data);
             }
         );
         }, []);
     
     const handlePost = () => {
-        console.log({
-            name: name,
-            discipline: discipline,
-            sub_start: subStart?.toISOString(),
-            sub_stop: subStop?.toISOString(),
-            games_start: gamesStart?.toISOString(),
-            games_stop: gamesStop?.toISOString(),
-            team_count: teamCount,
-            player_count: playerCount,
-            meeting_platform: meetingPlatform,
-            streaming_platform: streamingPlatform
-        })
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/create/",

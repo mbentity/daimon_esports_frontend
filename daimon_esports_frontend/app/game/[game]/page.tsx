@@ -17,15 +17,13 @@ export default function GamePage ({ params }: { params: { game: string } }) {
 
     const checkGameInProgress = (game: any) => {
         if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-            console.log("a game is in progress");
         }
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
 
     return (
         <div>
-            <h1>Game</h1>
-            <h2>{game?.team1.name} vs {game?.team2.name}</h2>
+            <h1>{game?.team1.tag} vs {game?.team2.tag}</h1>
             {game && checkGameInProgress(game) && <TwitchIframe url={game?.tournament?.streaming_platform}/>}
             <div className="card">
                 <p>Score: {game?.score1} - {game?.score2}</p>
