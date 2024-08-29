@@ -38,21 +38,23 @@ export default function TournamentCreate () {
         }, []);
     
     const handlePost = () => {
+        const data = {
+            name: name,
+            discipline: discipline,
+            sub_start_timestamp: subStart?.toISOString(),
+            sub_stop_timestamp: subStop?.toISOString(),
+            games_start_timestamp: gamesStart?.toISOString(),
+            games_stop_timestamp: gamesStop?.toISOString(),
+            team_count: teamCount,
+            player_count: playerCount,
+            meeting_platform: meetingPlatform,
+            streaming_platform: streamingPlatform
+        }
+        console.log(data);
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/create/",
-            data: {
-                name: name,
-                discipline: discipline,
-                sub_start_timestamp: subStart?.toISOString(),
-                sub_stop_timestamp: subStop?.toISOString(),
-                games_start_timestamp: gamesStart?.toISOString(),
-                games_stop_timestamp: gamesStop?.toISOString(),
-                team_count: teamCount,
-                player_count: playerCount,
-                meeting_platform: meetingPlatform,
-                streaming_platform: streamingPlatform
-            },
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournamentscreate/",
+            data: data,
             withCredentials: true
         })
             .then(() => {

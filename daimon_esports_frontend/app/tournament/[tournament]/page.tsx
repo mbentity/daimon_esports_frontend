@@ -7,8 +7,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function TournamentPage ({ params }: { params: { tournament: string } }) {
-	const { authenticated } = useGlobalContext();
+	const { user, authenticated } = useGlobalContext();
     const [canCreate, setCanCreate] = useState<boolean>(false);
+    const [isOrganizer, setIsOrganizer] = useState<boolean>(false);
 
 	useEffect(() => {
 	}, [authenticated])
@@ -18,6 +19,9 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)
             .then(response => {
                 setTournament(response.data);
+                if(user && user===response.data.user.id) {
+                    setIsOrganizer(true);
+                }
             });
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cancreateteam")
             .then(response => {
@@ -25,7 +29,7 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
             })
             .catch((error: any) => {
             })
-    }, []);
+    }, [user]);
 
     const calculateStandings = (matches: any, teams: any) => {
         let standings: any = [];
@@ -52,25 +56,10 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
         return standings;
     }
 
-    const checkGameInProgress = (game: any) => {
-        if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-        }
-        return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
-    }
-
     return (
         <div>
             <h1>{tournament?.name}</h1>
             {tournament?.games && <TournamentGameTimeline games={tournament?.games}/>}
-            <div className="card">
-                <p>Organizer: {tournament?.user?.name}</p>
-                <p>Discipline: {tournament?.discipline?.name}</p>
-                <p>Start: {formatDate(tournament?.games_start)}</p>
-                <p>End: {formatDate(tournament?.games_stop)}</p>
-                <p>Subscriptions open: {formatDate(tournament?.sub_start)}</p>
-                <p>Subscriptions close: {formatDate(tournament?.sub_stop)}</p>
-                <p>Format: {tournament?.team_count} teams of {tournament?.player_count} players each</p>
-            </div>
             <div className="card">
                 <h1>Standings</h1>
                 <ul>
@@ -84,6 +73,17 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                         );
                     })}
                 </ul>
+            </div>
+            <div className="card">
+                <p>Organizer: {tournament?.user?.name}</p>
+                <p>Discipline: {tournament?.discipline?.name}</p>
+                <p>Start: {formatDate(tournament?.games_start)}</p>
+                <p>End: {formatDate(tournament?.games_stop)}</p>
+                <p>Subscriptions open: {formatDate(tournament?.sub_start)}</p>
+                <p>Subscriptions close: {formatDate(tournament?.sub_stop)}</p>
+                <p>Format: {tournament?.team_count} teams of {tournament?.player_count} players each</p>
+                {canCreate && <Link href={"/team/create/"+params.tournament}><button>Create team</button></Link>}
+                {isOrganizer && <Link href={"/tournament/"+params.tournament+"/settings"}><button>Tournament Settings</button></Link>}
             </div>
             <HomeLink/>
         </div>

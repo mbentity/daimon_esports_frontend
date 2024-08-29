@@ -627,3 +627,26 @@ iframe {
 .gamelink:hover {
     color: var(--tertiary);
 }
+
+.overflow {
+    overflow-y: auto;
+    height: 50vh;
+}
+
+.cardobject {
+    background-color: var(--primary);
+    padding: 1vh;
+    margin: 1vh 0vh;
+}
+
+.cardobject p {
+    font-size: 2vh;
+    font-weight: bold;
+    color: var(--quaternary);
+}
+
+.buttonrow {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
