@@ -35,7 +35,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         }
     }, [authenticated]);
 
-    function checkTagInName () {
+    const checkTagInName = () => {
         let nameLower = name.toLowerCase();
         let tagLower = tag.toLowerCase();
         let tagIndex = 0;
@@ -50,14 +50,14 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         return false;
     }
 
-    function checkTagLength () {
+    const checkTagLength = () => {
         if(tag.length>maxTagLength) {
             return false;
         }
         return true;
     }
 
-    function handleDelete() {
+    const handleDelete = () => {
         axios({
             method: 'delete',
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/",
@@ -67,7 +67,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         })
     }
 
-    function handleChangeData() {
+    const handleChangeData = () => {
         if(!checkTagInName()||!checkTagLength()) {
             return;
         }
@@ -84,7 +84,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         })
     }
 
-    function handleTransferOwnership(player: string) {
+    const handleTransferOwnership = (player: string) => {
         axios({
             method: 'put',
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/transferownership/",
@@ -96,8 +96,8 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             location.reload();
         })
     }
-    
-    function handleKick(player: string) {
+   
+    const handleKick = (player: string) => {
         axios({
             method: 'delete',
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player+"/",

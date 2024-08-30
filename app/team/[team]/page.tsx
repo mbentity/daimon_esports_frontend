@@ -1,6 +1,6 @@
 "use client"
 
-import { Games, HomeLink } from "@/app/commons";
+import { GameTimeline, HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
@@ -32,7 +32,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
             })
     }, []);
 
-    function combineGames(team1: any, team2: any) {
+    const combineGames = (team1: any, team2: any) => {
         // merge arrays and sort by timestamp
         let combinedGames = team1.concat(team2);
         combinedGames.sort((a: any, b: any) => new Date(a.timestamp).getTime()-new Date(b.timestamp).getTime());
@@ -55,7 +55,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     return (
         <div>
             <h1>{team?.name}</h1>
-            {games&&<Games games={games}/>}
+            {games&&<GameTimeline games={games}/>}
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>
                 <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>

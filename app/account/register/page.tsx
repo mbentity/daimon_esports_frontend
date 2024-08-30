@@ -12,7 +12,7 @@ export default function AccountRegister () {
     const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [name, setName] = useState<string>("");
-    
+   
     useEffect(() => {
         if(authenticated) {
             location.href = "/account";
@@ -52,7 +52,7 @@ export default function AccountRegister () {
                     });
             });
     };
-    
+   
     return (
         <div>
             <h1>Register</h1>

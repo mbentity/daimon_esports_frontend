@@ -42,7 +42,7 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
             });
     }, [user]);
 
-    function checkTagInName () {
+    const checkTagInName = () => {
         let nameLower = name.toLowerCase();
         let tagLower = tag.toLowerCase();
         let tagIndex = 0;
@@ -57,14 +57,14 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
         return false;
     }
 
-    function checkTagLength () {
+    const checkTagLength = () => {
         if(tag.length>maxTagLength) {
             return false;
         }
         return true;
     }
 
-    function handleCreate () {
+    const handleCreate = () => {
         if(!checkTagInName() || !checkTagLength()) {
             return;
         }

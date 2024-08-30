@@ -45,9 +45,9 @@ export default function AccountInbox () {
             .catch((err) => {
             });
     }, []);
-            
+           
 
-    function handleAccept (request: any) {
+    const handleAccept = (request: any) => {
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/accept/",
@@ -61,7 +61,7 @@ export default function AccountInbox () {
             });
     }
 
-    function handleDelete (request: any) {
+    const handleDelete = (request: any) => {
         axios({
             method: "delete",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/"+request.id+"/",
@@ -72,7 +72,7 @@ export default function AccountInbox () {
             });
     }
 
-    function filterRequests (requests: any) {
+    const filterRequests = (requests: any) => {
         if(teamFilter) {
             return requests.filter((request: any) => request.team.id===teamFilter);
         }

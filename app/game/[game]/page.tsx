@@ -1,6 +1,6 @@
 "use client"
 
-import { HomeLink, TimeFormat, TwitchIframe } from "@/app/commons";
+import { HomeLink, formatDate, StreamIframe } from "@/app/commons";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -28,15 +28,15 @@ export default function GamePage ({ params }: { params: { game: string } }) {
     return (
         <div>
             <h1>{game?.team1.tag} vs {game?.team2.tag}</h1>
-            {game && checkGameInProgress(game) && <TwitchIframe url={game?.tournament?.streaming_platform}/>}
+            {game && checkGameInProgress(game) && <StreamIframe url={game?.tournament?.streaming_platform}/>}
             <div className="card">
                 <p>Score: {game?.score1} - {game?.score2}</p>
                 <Link href={"/team/"+game?.team1.id}><button>{game?.team1.name}</button></Link>
                 <Link href={"/team/"+game?.team2.id}><button>{game?.team2.name}</button></Link>
             </div>
             <div className="card">
-                {game?.timestamp && <p>Start: <TimeFormat timestamp={game?.timestamp}/></p>}
-                {game?.timestamp && game?.minutes && <p>End: <TimeFormat timestamp={(new Date(new Date(game?.timestamp).getTime()+game?.minutes*60000)).toString()}/></p>}
+                {game?.timestamp && <p>Start: {formatDate(game?.timestamp)}</p>}
+                {game?.timestamp && game?.minutes && <p>End: {formatDate((new Date(new Date(game?.timestamp).getTime()+game?.minutes*60000)).toString())}</p>}
             </div>
             <div className="card">
                 <Link href={"/tournament/"+game?.tournament.id}><button>{game?.tournament.name}</button></Link>

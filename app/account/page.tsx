@@ -16,7 +16,7 @@ export default function Account () {
 
     const [newPassword, setNewPassword] = useState<string>("");
     const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
-    
+   
     const [nameChange, toggleNameChange] = useState<boolean>(false);
     const [usernameChange, toggleUsernameChange] = useState<boolean>(false);
     const [passwordChange, togglePasswordChange] = useState<boolean>(false);

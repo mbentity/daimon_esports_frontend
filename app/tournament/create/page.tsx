@@ -36,7 +36,7 @@ export default function TournamentCreate () {
             }
         );
         }, []);
-    
+   
     const handlePost = () => {
         const data = {
             name: name,

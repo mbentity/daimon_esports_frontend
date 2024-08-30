@@ -1,8 +1,9 @@
 "use client"
 
-import { HomeLink, TournamentCard } from "@/app/commons";
+import { HomeLink } from "@/app/commons";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 export default function TournamentSearch () {
     const [search, setSearch] = useState<string>("");
@@ -56,17 +57,26 @@ export default function TournamentSearch () {
         }
     };
 
+    const TournamentCard = ({tournament}:{tournament: any}) => {
+        return <div className="card">
+            <Link href={"/tournament/"+tournament.id}>
+                <h1>{tournament.name}</h1>
+            </Link>
+            <h2>{tournament.discipline.name}</h2>
+        </div>
+    }
+
     return (
         <div>
             <h1>Search</h1>
             <div className="searchbar">
-                <input 
-                    type="text" 
-                    value={search} 
+                <input
+                    type="text"
+                    value={search}
                     onChange={e => setSearch(e.target.value)}
                     onKeyDown={handleKeyPress}
                 />
-                <select 
+                <select
                     value={sort.id}
                     onChange={e => setSort({id: e.target.value, name: e.target.selectedOptions[0].text})}
                 >

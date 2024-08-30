@@ -1,6 +1,6 @@
 "use client"
 
-import { HomeLink, TimeFormat } from "@/app/commons";
+import { HomeLink, formatDate } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
@@ -54,7 +54,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
         );
     }, [user]);
 
-    function handleChangeName () {
+    const handleChangeName = () => {
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/name/",
@@ -66,7 +66,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             });
     }
 
-    function handleChangeDiscipline () {
+    const handleChangeDiscipline = () => {
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/discipline/",
@@ -78,7 +78,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             });
     }
 
-    function handleChangeStreamingPlatform () {
+    const handleChangeStreamingPlatform = () => {
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/stream/",
@@ -90,7 +90,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             });
     }
 
-    function handleChangeMeetingPlatform () {
+    const handleChangeMeetingPlatform = () => {
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/meet/",
@@ -153,29 +153,27 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 <p>Games</p>
                 <Link href={"/game/create/"+params.tournament}><button>Create Game</button></Link>
                 <ul>
-                    {tournament?.games.map((game: any) =>
-                        <Link href={"/game/"+game.id}><div key={game.id} className="cardobject">
-                            <p>{game.team1.tag} vs {game.team2.tag}</p>
-                            <p>{game.score1} - {game.score2}</p>
-                            <p><TimeFormat timestamp={game.timestamp}/></p>
-                            <div className="buttonrow">
-                            <Link href={"/game/"+game.id+"/edit"}><button>Edit</button></Link>
-                            <Link href={"/game/"+game.id+"/delete"}><button>Delete</button></Link>
-                            </div>
-                        </div></Link>)}
+                    {tournament?.games.map((game: any) => <Link href={"/game/"+game.id}><div key={game.id} className="cardobject">
+                        <p>{game.team1.tag} vs {game.team2.tag}</p>
+                        <p>{game.score1} - {game.score2}</p>
+                        <p>{formatDate(game.timestamp)}</p>
+                        <div className="buttonrow">
+                        <Link href={"/game/"+game.id+"/edit"}><button>Edit</button></Link>
+                        <Link href={"/game/"+game.id+"/delete"}><button>Delete</button></Link>
+                        </div>
+                    </div></Link>)}
                 </ul>
             </div>
             <div className="card overflow">
                 <p>Teams</p>
                 <ul>
-                    {tournament?.teams.map((team: any) =>
-                        <Link href={"/team/"+team.id}><div key={team.id} className="cardobject">
-                            <p>{team.name} ({team.tag})</p>
-                            <ul>
-                                {team.players.map((player: any) => <li key={player.id}>{player.user.name}</li>)}
-                            </ul>
-                            <Link href={"/team/"+team.id+"/delete"}><button>Delete</button></Link>
-                        </div></Link>)}
+                    {tournament?.teams.map((team: any) => <Link href={"/team/"+team.id}><div key={team.id} className="cardobject">
+                        <p>{team.name} ({team.tag})</p>
+                        <ul>
+                            {team.players.map((player: any) => <li key={player.id}>{player.user.name}</li>)}
+                        </ul>
+                        <Link href={"/team/"+team.id+"/delete"}><button>Delete</button></Link>
+                    </div></Link>)}
                 </ul>
             </div>
             <HomeLink/>

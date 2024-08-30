@@ -1,6 +1,6 @@
 "use client"
 
-import { formatDate, HomeLink, TournamentGameTimeline, TwitchIframe } from "@/app/commons";
+import { formatDate, HomeLink, GameViewer, StreamIframe } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
@@ -67,7 +67,7 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
     return (
         <div>
             <h1>{tournament?.name}</h1>
-            {tournament?.games && <TournamentGameTimeline games={tournament?.games}/>}
+            {tournament?.games && <GameViewer games={tournament?.games}/>}
             <div className="card">
                 <h1>Standings</h1>
                 <ul>
