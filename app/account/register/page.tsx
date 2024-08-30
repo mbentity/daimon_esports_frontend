@@ -83,7 +83,7 @@ export default function AccountRegister () {
 						onChange={(e) => setConfirmPassword(e.target.value)}
 					/>
                     <button className="form" onClick={handleLocalRegister}>Register</button>
-					<Link className="form center" href="/account/login">Login instead?</Link>
+					<Link className="form centertext" href="/account/login">Login instead?</Link>
                 </div>
             </>
 			{password!==confirmPassword&&confirmPassword.length>0&&<h3 className="error">Passwords do not match</h3>}

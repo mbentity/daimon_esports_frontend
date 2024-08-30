@@ -149,7 +149,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleMeetingPlatformChange(false)}>Cancel</button>
                 </>}
             </div>
-            <div className="card overflow">
+            <div className="card verticalscroll">
                 <p>Games</p>
                 <Link href={"/game/create/"+params.tournament}><button>Create Game</button></Link>
                 <ul>
@@ -164,7 +164,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     </div></Link>)}
                 </ul>
             </div>
-            <div className="card overflow">
+            <div className="card verticalscroll">
                 <p>Teams</p>
                 <ul>
                     {tournament?.teams.map((team: any) => <Link href={"/team/"+team.id}><div key={team.id} className="cardobject">

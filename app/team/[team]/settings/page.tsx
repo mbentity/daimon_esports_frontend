@@ -133,7 +133,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
                     <button onClick={() => toggleTagChange(false)}>Cancel</button>
                 </>}
             </div>
-            <div className="card overflow">
+            <div className="card verticalscroll">
                 <p>Members</p>
                 <ul>
                     {team?.players.map((member: any) => {

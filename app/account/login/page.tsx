@@ -54,7 +54,7 @@ export default function AccountLogin () {
                         onChange={(e) => setLocalPassword(e.target.value)}
                     />
                     <button className="form" onClick={handleLocalLogin}>Login</button>
-                    <Link className="form center" href="/account/register">Register instead?</Link>
+                    <Link className="form centertext" href="/account/register">Register instead?</Link>
             </div>
             <HomeLink/>
         </div>

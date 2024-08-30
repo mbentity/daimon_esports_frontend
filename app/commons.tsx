@@ -112,7 +112,6 @@ export const StreamIframe = ({url}:{url: string}) => {
     else if(youtube) {
         const video = url.split("v=")[1];
         return <iframe
-            className="center topmargin"
             src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=1`}
             height="720"
             width="1280"
@@ -178,7 +177,6 @@ export const Popup = () => {
     }
     return <div id='popup'>
         <div id='popupcontent'>
-            <button onClick={() => setPopup(null)} className='close'>X</button>
             <p>{popup?.text}</p>
             {popup?.buttons.map((button: any, index: number) => {
                 return <button key={index} onClick={button.action}>{button.text}</button>
