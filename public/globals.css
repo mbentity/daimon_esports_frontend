@@ -44,23 +44,23 @@ body {
     font-family: var(--font);
     background-color: var(--primary);
     color: var(--quaternary);
-    margin: 0;
-    padding: 0;
+    margin: 0vh;
+    padding: 0vh;
 }
 
 h1 {
-    font-size: 5rem;
+    font-size: 10vh;
     text-align: center;
     font-weight: bold;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 5vh;
     text-align: center;
 }
 
 h3 {
-    font-size: 1rem;
+    font-size: 2vh;
     text-align: center;
 }
 
@@ -77,12 +77,12 @@ a {
 .button {
     background-color: var(--quinary);
     color: var(--primary);
-    font-size: 2.5rem;
+    font-size: 5vh;
     text-align: center;
     font-weight: bold;
-    padding: 1rem;
+    padding: 2vh;
     margin: auto;
-    margin-top: 2rem;
+    margin-top: 4vh;
     cursor: pointer;
     width: 90%;
     display: block;
@@ -90,12 +90,12 @@ a {
 
 .card {
     background-color: var(--secondary);
-    border: 0.5rem solid var(--quaternary);
-    border-radius: 1rem;
-    padding: 1rem;
-    width: 75rem;
+    border: 1vh solid var(--quaternary);
+    border-radius: 2vh;
+    padding: 2vh;
+    width: 150vh;
     margin: auto;
-    margin-top: 2rem;
+    margin-top: 4vh;
     position: relative;
 }
 
@@ -104,42 +104,42 @@ a {
 }
 
 .card img {
-    height: 4rem;
-    margin-right: 0.5rem;
-    margin-left: 1.5rem;
+    height: 8vh;
+    margin-right: 1vh;
+    margin-left: 3vh;
 }
 
 .card p {
     color: var(--primary);
-    font-size: 2rem;
+    font-size: 4vh;
     font-weight: bold;
     vertical-align: middle;
-    margin-left: 1.5rem;
+    margin-left: 3vh;
 }
 
 .card p.text {
-    font-size: 1.5rem;
+    font-size: 3vh;
     font-weight: normal;
 }
 
 .card input {
-    font-size: 1.5rem;
+    font-size: 3vh;
     font-weight: normal;
-    margin-left: 1.5rem;
-    width: 50rem;
-    padding: 1rem;
+    margin-left: 3vh;
+    width: 100vh;
+    padding: 2vh;
 }
 
 .card button {
     background-color: var(--quinary);
     color: var(--primary);
-    font-size: 2rem;
+    font-size: 4vh;
     text-align: center;
     font-weight: bold;
-    padding: 1rem;
-    margin-left: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    padding: 2vh;
+    margin-left: 3vh;
+    margin-top: 4vh;
+    margin-bottom: 2vh;
     cursor: pointer;
     display: inline-block;
 }
@@ -147,18 +147,18 @@ a {
 .formtab {
     display: flex;
     flex-direction: row;
-    width: 75rem;
+    width: 150vh;
     margin: auto;
-    border: 0.5rem solid var(--quaternary);
-    margin-bottom: 2rem;
+    border: 1vh solid var(--quaternary);
+    margin-bottom: 4vh;
 }
 
 .form {
     background-color: var(--primary);
     font-weight: bold;
-    padding: 1rem;
+    padding: 2vh;
     flex-grow: 1;
-    border-left: 0.1rem solid var(--quaternary);
+    border-left: 1vh solid var(--quaternary);
 }
 
 .centertext {
@@ -166,16 +166,16 @@ a {
 }
 
 .homelink {
-    width: 7rem;
-    height: 7rem;
+    width: 15vh;
+    height: 15vh;
     position: fixed;
-    left: 0rem;
-    top: 0rem;
+    left: 0vh;
+    top: 0vh;
 }
 
 .homelink img {
-    width: 5rem;
-    margin: 1rem;
+    width: 10vh;
+    margin: 2vh;
     transition: 0.1s;
 }
 
@@ -207,7 +207,6 @@ a {
 
 .header {
     background-color: var(--secondary);
-    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -222,8 +221,8 @@ a {
     font-weight: bold;
     text-align: center;
     width: 100%;
-    padding: 0;
-    margin: 0;
+    padding: 0vh;
+    margin: 0vh;
     top: 1vh;
 }
 
@@ -287,12 +286,11 @@ iframe {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    margin: 2rem;
+    margin: 4vh;
 }
 
 .games {
     background-color: var(--tertiary);
-    width: 100%;
     display: flex;
     min-height: min-content;
     overflow-x: auto;
@@ -350,11 +348,11 @@ iframe {
 #notification
 {
     font-size: 4vh;
-    margin: 5px;
-    padding: 2rem;
-    filter: drop-shadow(10px 10px 10px var(--primary));
-    border-radius: 5px;
-    border: 2.5px solid var(--quaternary);
+    margin: 1vh;
+    padding: 4vh;
+    filter: drop-shadow(1vh 1vh 1vh var(--primary));
+    border-radius: 1vh;
+    border: 1vh solid var(--quaternary);
     visibility: hidden;
     color: var(--primary);
     background-color: var(--quaternary);
@@ -362,7 +360,7 @@ iframe {
     z-index: 2;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 30px;
+    bottom: 1vh;
 }
 
 #notification.show
@@ -373,11 +371,11 @@ iframe {
 #popup
 {
     font-size: 4vh;
-    margin: 5px;
-    padding: 2rem;
-    filter: drop-shadow(10px 10px 10px var(--primary));
-    border-radius: 5px;
-    border: 2.5px solid var(--quaternary);
+    margin: 1vh;
+    padding: 4vh;
+    filter: drop-shadow(1vh 1vh 1vh var(--primary));
+    border-radius: 1vh;
+    border: 1vh solid var(--quaternary);
     visibility: hidden;
     color: var(--primary);
     background-color: var(--quaternary);
@@ -385,18 +383,18 @@ iframe {
     z-index: 2;
     left: 50%;
     transform: translateX(-50%);
-    top: 50px;
+    top: 1vh;
 }
 
 #popup button {
     background-color: var(--quinary);
     color: var(--primary);
-    font-size: 2.5rem;
+    font-size: 5vh;
     text-align: center;
     font-weight: bold;
-    padding: 1rem;
-    margin: 2rem;
-    margin-top: 2rem;
+    padding: 2vh;
+    margin: 4vh;
+    margin-top: 4vh;
     cursor: pointer;
     display: inline-block;
 }
