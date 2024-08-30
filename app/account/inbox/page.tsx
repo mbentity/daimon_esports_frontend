@@ -116,7 +116,7 @@ export default function AccountInbox () {
                     </div>
                 );
             })}
-            {outgoingRequests && outgoingRequests.map((request: any) => {
+            {!teamFilter && outgoingRequests && outgoingRequests.map((request: any) => {
                 return (
                     <div key={request.id} className="card">
                         <h2>{request.receiver.name}</h2>
