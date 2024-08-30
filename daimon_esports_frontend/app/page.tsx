@@ -6,10 +6,14 @@ import { useGlobalContext } from "./Context/store";
 import { GameTimeline, SearchBar } from "./commons";
 
 export default function Home () {
-	const { authenticated } = useGlobalContext();
+	const { setMessage, authenticated, setPopup } = useGlobalContext();
 
 	useEffect(() => {
-	}, [authenticated])
+		setMessage("Welcome to Daimon Esports!");
+		// {text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"}
+		setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
+	}
+	, []);
 
 	return (
 		<main>

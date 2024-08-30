@@ -650,3 +650,73 @@ iframe {
     flex-direction: row;
     justify-content: left;
 }
+
+@keyframes loading
+{
+    from {opacity: 0;}
+}
+
+#notification
+{
+    font-size: 1cm;
+    margin: 5px;
+    padding: 5px;
+    filter: drop-shadow(10px 10px 10px #000);
+    border-radius: 5px;
+    border: 2.5px solid #ffffffee;
+    visibility: hidden;
+    color: black;
+    background-color: #ffffffee;
+    position: fixed;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+    animation: loading 1s;
+}
+
+#notification.show
+{
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    padding: 2rem;
+}
+
+#popup
+{
+    font-size: 1cm;
+    margin: 5px;
+    padding: 5px;
+    filter: drop-shadow(10px 10px 10px #000);
+    border-radius: 5px;
+    border: 2.5px solid #ffffffee;
+    visibility: hidden;
+    color: black;
+    background-color: #ffffffee;
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50px;
+    animation: loading 1s;
+    padding: 2rem;
+}
+
+#popup button {
+    background-color: var(--quinary);
+    color: var(--primary);
+    font-size: 2.5rem;
+    text-align: center;
+    font-weight: bold;
+    padding: 1rem;
+    margin: 2rem;
+    margin-top: 2rem;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#popup.show
+{
+    visibility: visible;
+    animation: fadein 0.5s;
+}

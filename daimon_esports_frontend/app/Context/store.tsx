@@ -7,6 +7,11 @@ export interface Context {
 	setAuthenticated: Dispatch<SetStateAction<boolean | null>>;
 	user: string;
 	setUser: Dispatch<SetStateAction<string>>;
+	message: string;
+	setMessage: Dispatch<SetStateAction<string>>;
+	// {text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"}
+	popup: {text: string, buttons: {text: string, action: any}[], default: string} | null;
+	setPopup: Dispatch<SetStateAction<{text: string, buttons: {text: string, action: any}[], default: string} | null>>;
 }
 
 const GlobalContext = createContext<Context>({
@@ -14,11 +19,17 @@ const GlobalContext = createContext<Context>({
 	setAuthenticated: () => {},
 	user: "",
 	setUser: () => {},
+	message: "",
+	setMessage: () => {},
+	popup: null,
+	setPopup: () => {}
 });
 
 export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [authenticated, setAuthenticated]: [boolean | null, Dispatch<SetStateAction<boolean | null>>] = useState(null as boolean | null);
 	const [user, setUser]: [string, Dispatch<SetStateAction<string>>] = useState("");
+	const [message, setMessage]: [string, Dispatch<SetStateAction<string>>] = useState("");
+	const [popup, setPopup] = useState<{text: string, buttons: {text: string, action: any}[], default: string} | null>(null);
 
 	return (
 		<GlobalContext.Provider value={{
@@ -26,6 +37,10 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
 			setAuthenticated,
 			user,
 			setUser,
+			message,
+			setMessage,
+			popup,
+			setPopup
 		}}>
 			{children}
 		</GlobalContext.Provider>

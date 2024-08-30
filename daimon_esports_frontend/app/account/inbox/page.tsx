@@ -9,6 +9,7 @@ export default function AccountInbox () {
     const { authenticated } = useGlobalContext();
     const [requests, setRequests] = useState<any>(null);
     const [outgoingRequests, setOutgoingRequests] = useState<any>(null);
+    const [teamFilter, setTeamFilter] = useState<any>(null);
 
     useEffect(() => {
         if(authenticated===false) {
@@ -17,6 +18,12 @@ export default function AccountInbox () {
     }, [authenticated]);
 
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const team = urlParams.get("team");
+        if(team) {
+            setTeamFilter(team);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
         axios({
             method: "get",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/requests/",
@@ -24,8 +31,9 @@ export default function AccountInbox () {
         })
             .then((res) => {
                 setRequests(res.data);
-            }
-        );
+            })
+            .catch((err) => {
+            });
         axios({
             method: "get",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/outgoingrequests/",
@@ -33,9 +41,11 @@ export default function AccountInbox () {
         })
             .then((res) => {
                 setOutgoingRequests(res.data);
-            }
-        );
+            })
+            .catch((err) => {
+            });
     }, []);
+            
 
     function handleAccept (request: any) {
         axios({
@@ -73,11 +83,30 @@ export default function AccountInbox () {
             });
     }
 
+    function filterRequests (requests: any) {
+        if(teamFilter) {
+            return requests.filter((request: any) => request.team.id===teamFilter);
+        }
+        return requests;
+    }
+
     return (
         <div>
             <h1>Inbox</h1>
             <HomeLink/>
-            {requests && requests.map((request: any) => {
+            <div className="card">
+                <h2>Incoming Requests Filter</h2>
+                <select className="form" onChange={e => setTeamFilter(e.target.value)} value={teamFilter}>
+                    <option value="">All</option>
+                    {requests && requests.map((request: any) => {
+                        return (
+                            <option key={request.team.id} value={request.team.id}>{request.team.name}</option>
+                        );
+                    })}
+                </select>
+                <button onClick={() => setTeamFilter("")}>Clear</button>
+            </div>
+            {requests && filterRequests(requests).map((request: any) => {
                 return (
                     <div key={request.id} className="card">
                         <h2>{request.sender.name}</h2>
@@ -96,6 +125,7 @@ export default function AccountInbox () {
                     </div>
                 );
             })}
+            {requests && requests.length===0 && outgoingRequests && outgoingRequests.length===0 && <h2>Your inbox is empty.</h2>}
         </div>
     );
 }

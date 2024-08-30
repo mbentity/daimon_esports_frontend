@@ -2,11 +2,15 @@
 
 import { HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function TeamCreate ({ params }: { params: { tournament: string } }) {
     const { user, authenticated } = useGlobalContext();
+    const [tournament, setTournament] = useState<any>(null);
+    const [name, setName] = useState<string>("");
+    const [tag, setTag] = useState<string>("");
+    const maxTagLength = 4;
 
     useEffect(() => {
         if(authenticated===false) {
@@ -15,22 +19,93 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
     }, [authenticated]);
 
     useEffect(() => {
-        // if user is the same as the tournament creator, send them back to the tournament page
+        // if user cannot create, send them back to the tournament page
         axios({
             method: "get",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
             withCredentials: true
         })
             .then((res) => {
-                if(user&&res.data.user.id==user) {
+                setTournament(res.data);
+            });
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cancreateteam/",
+            withCredentials: true
+        })
+            .then(res => {
+                if(res.data.canCreate===false) {
                     location.href = "/tournament/"+params.tournament;
                 }
+            })
+            .catch(err => {
             });
     }, [user]);
+
+    function checkTagInName () {
+        let nameLower = name.toLowerCase();
+        let tagLower = tag.toLowerCase();
+        let tagIndex = 0;
+        for(let i=0; i<nameLower.length; i++) {
+            if(nameLower[i]==tagLower[tagIndex]) {
+                tagIndex++;
+                if(tagIndex==tag.length) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function checkTagLength () {
+        if(tag.length>maxTagLength) {
+            return false;
+        }
+        return true;
+    }
+
+    function handleCreate () {
+        if(!checkTagInName() || !checkTagLength()) {
+            return;
+        }
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teamscreate/",
+            data: {
+                name: name,
+                tag: tag,
+                tournament: params.tournament
+            },
+            withCredentials: true
+        })
+            .then(() => {
+                location.href = "/tournament/"+params.tournament;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     return (
         <div>
             <h1>Create Team</h1>
+            <div className="formtab">
+                <input className="form"
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <input className="form"
+                    type="text"
+                    placeholder="Tag"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                />
+                <button className="form" onClick={handleCreate}>Create</button>
+            </div>
+            {name.length>0&&tag.length>0&&!checkTagInName()&&<h3 className="error">Tag must be in name</h3>}
+            {tag.length>0&&!checkTagLength()&&<h3 className="error">Tag must be {maxTagLength} characters or less</h3>}
             <HomeLink/>
         </div>
     );

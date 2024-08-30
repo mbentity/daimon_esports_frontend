@@ -316,6 +316,72 @@ export const TournamentCard = ({tournament}:{tournament: any}) => {
     </div>
 }
 
+export const Notification = () => {
+    const { message } = useGlobalContext();
+    useEffect(() => {
+        if(message) {
+            notify();
+        }
+    }, [message]);
+    function notify()
+    {
+        const x = document.getElementById(`notification`)
+		if(x)
+		{
+			x.className = `show`
+			setTimeout(function()
+			{
+				x.className = x.className.replace(`show`, ``)
+			}, 3000)
+		}
+    }
+    return <div id='notification'>
+        {message}
+    </div>
+}
+
+export const Popup = () => {
+    const { popup, setPopup } = useGlobalContext();
+    useEffect(() => {
+        if(popup) {
+            console.log("showing popup");
+            console.log(popup);
+            showPopup();
+        }
+        else {
+            hidePopup();
+        }
+    }
+    , [popup]);
+    function showPopup()
+    {
+        const x = document.getElementById(`popup`)
+        if(x)
+        {
+            x.className = `show`
+        }
+    }
+    function hidePopup()
+    {
+        const x = document.getElementById(`popup`)
+        if(x)
+        {
+            x.className = x.className.replace(`show`, ``)
+        }
+    }
+    // {text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"}
+    return <div id='popup'>
+        <div id='popupcontent'>
+            <button onClick={() => setPopup(null)} className='close'>X</button>
+            <p>{popup?.text}</p>
+            {popup?.buttons.map((button: any, index: number) => {
+                return <button key={index} onClick={button.action}>{button.text}</button>
+            })}
+            {popup?.default&&<button onClick={() => setPopup(null)}>{popup.default}</button>}
+        </div>
+    </div>
+}
+
 export const formatDate = (date: string) => {
     // example date: 2024-07-14T18:56:52+02:00
     const d = new Date(date);

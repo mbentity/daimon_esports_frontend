@@ -7,7 +7,7 @@ import axios from "axios";
 import Link from "next/link";
 
 export default function Account () {
-    const { setUser, authenticated, setAuthenticated } = useGlobalContext();
+    const { setMessage, setUser, authenticated, setAuthenticated } = useGlobalContext();
     const [userData, setUserData] = useState<any>();
 
     const [name, setName] = useState<string>("");
@@ -41,6 +41,7 @@ export default function Account () {
     }, [nameChange, usernameChange, passwordChange]);
 
     const handleLogout = () => {
+        setMessage("Logged out");
         localStorage.removeItem("token");
         setUser("");
         setAuthenticated(false);

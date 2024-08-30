@@ -7,13 +7,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function TeamPage ({ params }: { params: { team: string } }) {
-	const { authenticated } = useGlobalContext();
+	const { user } = useGlobalContext();
     const [canJoin, setCanJoin] = useState<boolean>(false);
     const [team, setTeam] = useState<any>(null);
     const [games, setGames] = useState<any>(null);
-
-	useEffect(() => {
-	}, [authenticated])
 
     useEffect(() => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team)
@@ -35,10 +32,16 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     }
 
     const handleJoin = () => {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team+"/join")
-            .then(response => {
-                setTeam(response.data);
-            })
+        axios({
+            method: 'post',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requestscreate/",
+            withCredentials: true,
+            data: {
+                team: team.id
+            }
+        }).then(response => {
+            setCanJoin(false);
+        })
     }
 
     return (
@@ -47,9 +50,9 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
             {games&&<Games games={games}/>}
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>
-                <p>Tournament:</p>
-                <Link href={"/tournament/"+team?.tournament?.id}><button>{team?.tournament?.name}</button></Link>
+                <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>
                 {canJoin && <button onClick={handleJoin}>Request to join</button>}
+                {user&&user===team?.user.id&&<Link href={"/team/"+team?.id+"/settings"}><button>Team settings</button></Link>}
             </div>
             <div className="card">
                 <p>Players:</p>
