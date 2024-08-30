@@ -22,7 +22,11 @@ export default function TournamentSearch () {
         const search = urlParams.get("query");
         if(search) {
             setSearch(search);
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search)
+            axios({
+                method: 'get',
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search,
+                withCredentials: true
+            })
                 .then(response => {
                     setTournaments(response.data);
                 })
@@ -36,7 +40,11 @@ export default function TournamentSearch () {
     , [completed, closed]);
 
     const handleSearch = () => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+completed+closed)
+        axios({
+            method: 'get',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+completed+closed,
+            withCredentials: true
+        })
             .then(response => {
                 setTournaments(response.data);
             })

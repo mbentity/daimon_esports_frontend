@@ -18,7 +18,11 @@ export default function GameCreate ({ params }: { params: { tournament: string }
     }, [authenticated]);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
+            withCredentials: true
+        })
             .then(response => {
                 console.log(response.data);
                 setTournament(response.data);

@@ -30,7 +30,7 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
             });
         axios({
             method: "get",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cancreateteam/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cansubscribe/",
             withCredentials: true
         })
             .then(res => {
@@ -70,7 +70,7 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
         }
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teamscreate/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/create/",
             data: {
                 name: name,
                 tag: tag,

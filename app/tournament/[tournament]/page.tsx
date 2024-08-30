@@ -16,14 +16,22 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
     const [tournament, setTournament] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
+            withCredentials: true
+        })
             .then(response => {
                 setTournament(response.data);
                 if(user && user===response.data.user.id) {
                     setIsOrganizer(true);
                 }
             });
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cancreateteam")
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/cansubscribe/",
+            withCredentials: true
+        })
             .then(response => {
                 setCanCreate(response.data);
             })

@@ -16,7 +16,11 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     const maxTagLength = 4;
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team+"/",
+            withCredentials: true
+        })
             .then(response => {
                 setTeam(response.data);
                 if(user&&response.data.user.id!=user) {
@@ -56,7 +60,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     function handleDelete() {
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id,
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/",
             withCredentials: true
         }).then(response => {
             location.href = "/account";
@@ -69,7 +73,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         }
         axios({
             method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id,
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/",
             withCredentials: true,
             data: {
                 name: name,
@@ -83,7 +87,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     function handleTransferOwnership(player: string) {
         axios({
             method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/transferownership",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/transferownership/",
             withCredentials: true,
             data: {
                 newOwner: player
@@ -96,7 +100,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     function handleKick(player: string) {
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player,
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player+"/",
             withCredentials: true,
         }).then(response => {
             location.reload();

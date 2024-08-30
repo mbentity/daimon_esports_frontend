@@ -13,11 +13,19 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     const [games, setGames] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+params.team+"/",
+            withCredentials: true
+        })
             .then(response => {
                 setTeam(response.data);
                 combineGames(response.data.team1,response.data.team2);
-                axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+response.data.tournament.id+"/cancreateteam")
+                axios({
+                    method: "get",
+                    url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+response.data.tournament.id+"/cansubscribe/",
+                    withCredentials: true
+                })
                     .then(response => {
                         setCanJoin(response.data);
                     })
@@ -34,7 +42,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     const handleJoin = () => {
         axios({
             method: 'post',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requestscreate/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/create/",
             withCredentials: true,
             data: {
                 team: team.id

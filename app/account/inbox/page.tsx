@@ -26,7 +26,7 @@ export default function AccountInbox () {
         }
         axios({
             method: "get",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/requests/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/requests/in/",
             withCredentials: true
         })
             .then((res) => {
@@ -36,7 +36,7 @@ export default function AccountInbox () {
             });
         axios({
             method: "get",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/outgoingrequests/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/requests/out/",
             withCredentials: true
         })
             .then((res) => {
@@ -50,7 +50,7 @@ export default function AccountInbox () {
     function handleAccept (request: any) {
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/requests/accept/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/accept/",
             data: {
                 id: request.id
             },
@@ -61,18 +61,7 @@ export default function AccountInbox () {
             });
     }
 
-    function handleDecline (request: any) {
-        axios({
-            method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/"+request.id+"/",
-            withCredentials: true
-        })
-            .then(() => {
-                location.reload();
-            });
-    }
-
-    function handleCancel (request: any) {
+    function handleDelete (request: any) {
         axios({
             method: "delete",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/"+request.id+"/",
@@ -112,7 +101,7 @@ export default function AccountInbox () {
                         <h2>{request.sender.name}</h2>
                         <p>{request.sender.name} has requested to join your team: {request.team.name}.</p>
                         <button onClick={() => handleAccept(request)}>Accept</button>
-                        <button onClick={() => handleDecline(request)}>Decline</button>
+                        <button onClick={() => handleDelete(request)}>Decline</button>
                     </div>
                 );
             })}
@@ -121,7 +110,7 @@ export default function AccountInbox () {
                     <div key={request.id} className="card">
                         <h2>{request.receiver.name}</h2>
                         <p>You have requested to join {request.receiver.name}'s team: {request.team.name}.</p>
-                        <button onClick={() => handleCancel(request)}>Cancel</button>
+                        <button onClick={() => handleDelete(request)}>Cancel</button>
                     </div>
                 );
             })}

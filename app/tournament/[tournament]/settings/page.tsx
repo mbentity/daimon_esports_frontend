@@ -15,9 +15,6 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     const [discipline, setDiscipline] = useState<any>();
     const [streamingPlatform, setStreamingPlatform] = useState<string>("");
     const [meetingPlatform, setMeetingPlatform] = useState<string>("");
-    const [games, setGames] = useState<any>(null);
-    const [teams, setTeams] = useState<any>(null);
-    const [players, setPlayers] = useState<any>(null);
 
     const [nameChange, toggleNameChange] = useState<boolean>(false);
     const [disciplineChange, toggleDisciplineChange] = useState<boolean>(false);
@@ -31,13 +28,20 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     }, [authenticated]);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
+            withCredentials: true
+        })
             .then(response => {
-                console.log(response.data);
-                setTournament(response.data);
                 if(user&&user!==response.data.user.id) {
                     location.href = "/tournament/"+params.tournament;
                 }
+                setTournament(response.data);
+                setName(response.data.name);
+                setDiscipline(response.data.discipline.id);
+                setStreamingPlatform(response.data.streaming_platform);
+                setMeetingPlatform(response.data.meeting_platform);
             });
         axios({
             method: "get",
@@ -51,28 +55,48 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     }, [user]);
 
     function handleChangeName () {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/name", {name: name})
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/name/",
+            data: {name: name},
+            withCredentials: true
+        })
             .then(() => {
                 toggleNameChange(false);
             });
     }
 
     function handleChangeDiscipline () {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/discipline", {discipline: discipline})
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/discipline/",
+            data: {discipline: discipline},
+            withCredentials: true
+        })
             .then(() => {
                 toggleDisciplineChange(false);
             });
     }
 
     function handleChangeStreamingPlatform () {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/streamingplatform", {streamingPlatform: streamingPlatform})
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/stream/",
+            data: {streamingPlatform: streamingPlatform},
+            withCredentials: true
+        })
             .then(() => {
                 toggleStreamingPlatformChange(false);
             });
     }
 
     function handleChangeMeetingPlatform () {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/meetingplatform", {meetingPlatform: meetingPlatform})
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/meet/",
+            data: {meetingPlatform: meetingPlatform},
+            withCredentials: true
+        })
             .then(() => {
                 toggleMeetingPlatformChange(false);
             });
@@ -88,7 +112,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleNameChange(true)}>Edit</button>
                 </>}
                 {nameChange&&<>
-                    <input type="text" value={tournament?.name} onChange={e => setName(e.target.value)}/>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)}/>
                     <button onClick={handleChangeName}>Save</button>
                     <button onClick={() => toggleNameChange(false)}>Cancel</button>
                 </>}
@@ -110,7 +134,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleStreamingPlatformChange(true)}>Edit</button>
                 </>}
                 {streamingPlatformChange&&<>
-                    <input type="text" value={tournament?.streaming_platform} onChange={e => setStreamingPlatform(e.target.value)}/>
+                    <input type="text" value={streamingPlatform} onChange={e => setStreamingPlatform(e.target.value)}/>
                     <button onClick={handleChangeStreamingPlatform}>Save</button>
                     <button onClick={() => toggleStreamingPlatformChange(false)}>Cancel</button>
                 </>}
@@ -120,7 +144,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleMeetingPlatformChange(true)}>Edit</button>
                 </>}
                 {meetingPlatformChange&&<>
-                    <input type="text" value={tournament?.meeting_platform} onChange={e => setMeetingPlatform(e.target.value)}/>
+                    <input type="text" value={meetingPlatform} onChange={e => setMeetingPlatform(e.target.value)}/>
                     <button onClick={handleChangeMeetingPlatform}>Save</button>
                     <button onClick={() => toggleMeetingPlatformChange(false)}>Cancel</button>
                 </>}

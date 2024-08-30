@@ -40,7 +40,11 @@ export const Character = ({id}:{id: string}) => {
     const [character, setCharacter] = useState<Character|null>(null)
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/player/"+id+"/character")
+        axios({
+            method: 'get',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/player/"+id+"/character",
+            withCredentials: true
+        })
             .then(response => {
                 setCharacter({
                     gender: response.data.gender,
@@ -147,7 +151,11 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
 
         if(token) {
             axios.defaults.headers.common["Authorization"] = "Bearer "+token;
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user", {withCredentials: true})
+            axios({
+                method: 'get',
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user",
+                withCredentials: true
+            })
                 .then((res: any) => {
                     setUser(res.data.id);
                     setAuthenticated(true);
@@ -194,7 +202,11 @@ export const TwitchIframe = ({url}:{url: string}) => {
 export const GameTimeline = ({count}:{count: number}) => {
     const [games, setGames] = useState<any[]>([]);
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/")
+        axios({
+            method: 'get',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/",
+            withCredentials: true
+        })
             .then(response => {
                 setGames(response.data);
             })

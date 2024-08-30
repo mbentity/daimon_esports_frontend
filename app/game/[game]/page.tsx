@@ -9,7 +9,11 @@ export default function GamePage ({ params }: { params: { game: string } }) {
     const [game, setGame] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+params.game)
+        axios({
+            method: "get",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+params.game+"/",
+            withCredentials: true
+        })
             .then(response => {
                 setGame(response.data);
             })
