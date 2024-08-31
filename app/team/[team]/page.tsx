@@ -11,6 +11,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     const [canJoin, setCanJoin] = useState<boolean>(false);
     const [team, setTeam] = useState<any>(null);
     const [games, setGames] = useState<any>(null);
+    const [isMember, setIsMember] = useState<boolean>(false);
 
     useEffect(() => {
         axios({
@@ -32,6 +33,16 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
             })
     }, []);
 
+    useEffect(() => {
+        if(user && team) {
+            team.players.map((player: any) => {
+                if(player.user.id===user) {
+                    setIsMember(true);
+                }
+            })
+        }
+    }, [user, team]);
+
     const combineGames = (team1: any, team2: any) => {
         // merge arrays and sort by timestamp
         let combinedGames = team1.concat(team2);
@@ -52,6 +63,17 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         })
     }
 
+    const handleLeave = () => {
+        const playerId = team.players.filter((player: any) => player.user.id===user)[0].id;
+        axios({
+            method: 'delete',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+playerId+"/",
+            withCredentials: true
+        }).then(response => {
+            setIsMember(false);
+        })
+    }
+
     return (
         <div>
             <h1>{team?.name}</h1>
@@ -60,7 +82,8 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
                 <p>Owner: {team?.user?.name}</p>
                 <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>
                 {canJoin && <button onClick={handleJoin}>Request to join</button>}
-                {user&&user===team?.user.id&&<Link href={"/team/"+team?.id+"/settings"}><button>Team settings</button></Link>}
+                {isMember && <button onClick={handleLeave}>Leave team</button>}
+                {user&&user===team?.user.id&&<Link href={"/team/"+team?.id+"/settings"}><button>Team Settings</button></Link>}
             </div>
             <div className="card">
                 <p>Players:</p>

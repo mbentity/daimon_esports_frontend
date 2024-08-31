@@ -25,8 +25,25 @@ export default function GamePage ({ params }: { params: { game: string } }) {
         return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
     }
 
+    const TeamVersus = ({ team1, team2 }: { team1: any, team2: any }) => {
+        if(!team1 || !team2) {
+            return <></>;
+        }
+        console.log(team1, team2);
+        return (
+            <div className="card versus">
+                {team1.logo&&<img className="team" src={team1.logo} alt={team1.name}/>}
+                {!team1.logo&&<p className="team">{team1.tag}</p>}
+                <p className="vs">vs</p>
+                {team2.logo&&<img className="team" src={team2.logo} alt={team2.name}/>}
+                {!team2.logo&&<p className="team">{team2.tag}</p>}
+            </div>
+        );
+    }
+
     return (
         <div>
+            <TeamVersus team1={game?.team1} team2={game?.team2}/>
             <h1>{game?.team1.tag} vs {game?.team2.tag}</h1>
             {game && checkGameInProgress(game) && <StreamIframe url={game?.tournament?.streaming_platform}/>}
             <div className="card">

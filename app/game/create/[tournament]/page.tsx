@@ -10,6 +10,8 @@ export default function GameCreate ({ params }: { params: { tournament: string }
     const [tournament, setTournament] = useState<any>(null);
     const [team1, setTeam1] = useState<any>(null);
     const [team2, setTeam2] = useState<any>(null);
+    const [time, setTime] = useState<Date>();
+    const [minutes, setMinutes] = useState<number>();
 
     useEffect(() => {
         if(authenticated===false) {
@@ -24,7 +26,6 @@ export default function GameCreate ({ params }: { params: { tournament: string }
             withCredentials: true
         })
             .then(response => {
-                console.log(response.data);
                 setTournament(response.data);
                 if(user&&user!==response.data.user.id) {
                     location.href = "/tournament/"+params.tournament;
@@ -32,15 +33,47 @@ export default function GameCreate ({ params }: { params: { tournament: string }
             });
     }, [user]);
 
+    const handlePost = () => {
+        const data = {
+            team1: team1,
+            team2: team2,
+            time: time?.toISOString(),
+            minutes: minutes
+        }
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/create/",
+            data: data,
+            withCredentials: true
+        })
+            .then(() => {
+                location.href = "/tournament/"+params.tournament+"/settings";
+            });
+    }
+
     return (
         <div>
             <h1>Create Game</h1>
-            <div className="card">
-                <p>Tournament:</p>
-                <p>{tournament?.name}</p>
+            <div className="formtab">
+                <select className="form" onChange={(e) => setTeam1(e.target.value)}>
+                    <option>Select Team 1</option>
+                    {tournament&&tournament.teams.map((team: any) => {
+                        return <option value={team.id}>{team.name}</option>
+                    })}
+                </select>
+                <select className="form" onChange={(e) => setTeam2(e.target.value)}>
+                    <option>Select Team 2</option>
+                    {tournament&&tournament.teams.map((team: any) => {
+                        return <option value={team.id}>{team.name}</option>
+                    })}
+                </select>
             </div>
-            <div className="card">
+            <div className="formtab">
+                <label className="form" >Time:</label>
+                <input className="form" type="datetime-local" onChange={(e) => setTime(new Date(e.target.value))}/>
+                <input className="form" type="number" placeholder="Predicted Duration (in minutes)" onChange={(e) => setMinutes(parseInt(e.target.value))}/>
             </div>
+            <button className="button" onClick={handlePost}>Create Game</button>
             <HomeLink/>
         </div>
     );

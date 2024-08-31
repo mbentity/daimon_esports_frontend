@@ -10,7 +10,6 @@ export default function Home () {
 
 	useEffect(() => {
 		setMessage("Welcome to Daimon Esports!");
-		// {text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"}
 		setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
 	}
 	, []);

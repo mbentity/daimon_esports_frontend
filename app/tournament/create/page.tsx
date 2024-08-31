@@ -50,7 +50,6 @@ export default function TournamentCreate () {
             meeting_platform: meetingPlatform,
             streaming_platform: streamingPlatform
         }
-        console.log(data);
         axios({
             method: "post",
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/create/",
@@ -58,7 +57,7 @@ export default function TournamentCreate () {
             withCredentials: true
         })
             .then(() => {
-                //location.href = "/account/tournaments";
+                location.href = "/account/tournaments";
             })
     }
 
@@ -79,18 +78,16 @@ export default function TournamentCreate () {
                 <input className="form" type="text" placeholder="Streaming Platform" onChange={(e) => setStreamingPlatform(e.target.value)} />
             </div>
             <div className="formtab">
-                <label className="form" >Subscription Start</label>
-                <label className="form" >Subscription Stop</label>
-                <label className="form" >Games Start</label>
-                <label className="form" >Games Stop</label>
-            </div>
-            <div className="formtab">
+                <label className="form">Subscription Start:</label>
                 <input className="form" type="datetime-local" onChange={(e) => setSubStart(new Date(e.target.value))} />
+                <label className="form">Subscription Stop:</label>
                 <input className="form" type="datetime-local" onChange={(e) => setSubStop(new Date(e.target.value))} />
+                <label className="form">Games Start:</label>
                 <input className="form" type="datetime-local" onChange={(e) => setGamesStart(new Date(e.target.value))} />
+                <label className="form">Games Stop:</label>
                 <input className="form" type="datetime-local" onChange={(e) => setGamesStop(new Date(e.target.value))} />
             </div>
-            <button className="form" onClick={handlePost}>Create</button>
+            <button className="button" onClick={handlePost}>Create</button>
             <HomeLink/>
         </div>
     );

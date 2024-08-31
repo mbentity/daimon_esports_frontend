@@ -82,7 +82,6 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
                 location.href = "/tournament/"+params.tournament;
             })
             .catch(err => {
-                console.log(err);
             });
     }
 

@@ -130,10 +130,10 @@ export const Notification = () => {
     const { message } = useGlobalContext();
     useEffect(() => {
         if(message) {
-            notify();
+            show();
         }
     }, [message]);
-    const notify = () => {
+    const show = () => {
         const x = document.getElementById(`notification`)
 		if(x)
 		{
@@ -152,23 +152,21 @@ export const Popup = () => {
     const { popup, setPopup } = useGlobalContext();
     useEffect(() => {
         if(popup) {
-            console.log("showing popup");
-            console.log(popup);
-            showPopup();
+            show();
         }
         else {
-            hidePopup();
+            hide();
         }
     }
     , [popup]);
-    const showPopup = () => {
+    const show = () => {
         const x = document.getElementById(`popup`)
         if(x)
         {
             x.className = `show`
         }
     }
-    const hidePopup = () => {
+    const hide = () => {
         const x = document.getElementById(`popup`)
         if(x)
         {

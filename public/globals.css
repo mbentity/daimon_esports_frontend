@@ -412,3 +412,21 @@ iframe {
     cursor: pointer;
     display: inline-block;
 }
+
+.versus {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.versus .team {
+    max-width: 50vh;
+    height: auto;
+    flex: 1;
+    font-size: 20vh;
+}
+
+.versus .vs {
+    flex: 0;
+    font-size: 15vh;
+}

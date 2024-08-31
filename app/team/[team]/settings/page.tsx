@@ -10,6 +10,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
 	const { user, authenticated } = useGlobalContext();
     const [team, setTeam] = useState<any>(null);
     const [name, setName] = useState<string>("");
+    const [logo, setLogo] = useState<any>(null);
     const [tag, setTag] = useState<string>("");
     const [nameChange, toggleNameChange] = useState<boolean>(false);
     const [tagChange, toggleTagChange] = useState<boolean>(false);
@@ -22,10 +23,12 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             withCredentials: true
         })
             .then(response => {
-                setTeam(response.data);
                 if(user&&response.data.user.id!=user) {
                     location.href = "/team/"+params.team;
                 }
+                setTeam(response.data);
+                setName(response.data.name);
+                setTag(response.data.tag);
             })
     }, [user]);
 
@@ -107,6 +110,32 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         })
     }
 
+    const handleLogoSet = (e: any) => {
+        if(e.target.files.length==0) {
+            return;
+        }
+        setLogo(e.target.files[0]);
+    }
+
+    const handleLogoCancel = () => {
+        setLogo(null);
+        let fileInput = document.getElementById("file") as HTMLInputElement;
+        fileInput.value = "";
+    }
+
+    const handleLogoUpload = () => {
+        const formData = new FormData();
+        formData.append("logo", logo);
+        axios({
+            method: 'put',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/logo/",
+            withCredentials: true,
+            data: formData
+        }).then(response => {
+            location.reload();
+        }
+        )
+    }
 
     return (
         <div>
@@ -133,6 +162,15 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
                     <button onClick={() => toggleTagChange(false)}>Cancel</button>
                 </>}
             </div>
+            <div className="card">
+                <p>Logo</p>
+                {!logo&&team?.logo&&<img src={team.logo} alt="Team logo"/>}
+                {logo&&<><img src={URL.createObjectURL(logo)} alt="Team logo"/>
+                <button onClick={handleLogoCancel}>Cancel</button>
+                <button onClick={handleLogoUpload}>Save</button>
+                </>}
+                <input id="file" className="form" type="file" onChange={handleLogoSet} accept="image/png"/>
+            </div>
             <div className="card verticalscroll">
                 <p>Members</p>
                 <ul>
@@ -147,7 +185,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             </div>
             <div className="card">
                 <Link href={"/account/inbox/?team="+team?.id}><button>Your Inbox</button></Link>
-                <button onClick={handleDelete}>Delete Team</button>
+                <button onClick={handleDelete}>Disband Team</button>
             </div>
             <HomeLink/>
         </div>

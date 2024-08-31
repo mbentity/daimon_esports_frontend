@@ -9,7 +9,6 @@ export interface Context {
 	setUser: Dispatch<SetStateAction<string>>;
 	message: string;
 	setMessage: Dispatch<SetStateAction<string>>;
-	// {text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"}
 	popup: {text: string, buttons: {text: string, action: any}[], default: string} | null;
 	setPopup: Dispatch<SetStateAction<{text: string, buttons: {text: string, action: any}[], default: string} | null>>;
 }

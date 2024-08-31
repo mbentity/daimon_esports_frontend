@@ -15,11 +15,16 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     const [discipline, setDiscipline] = useState<any>();
     const [streamingPlatform, setStreamingPlatform] = useState<string>("");
     const [meetingPlatform, setMeetingPlatform] = useState<string>("");
+    const [subTime, setSubTime] = useState<number>(0);
+    const [subEnd, setSubEnd] = useState<number>(0);
+    const [gameTime, setGameTime] = useState<number>(0);
+    const [gameEnd, setGameEnd] = useState<number>(0);
 
     const [nameChange, toggleNameChange] = useState<boolean>(false);
     const [disciplineChange, toggleDisciplineChange] = useState<boolean>(false);
     const [streamingPlatformChange, toggleStreamingPlatformChange] = useState<boolean>(false);
     const [meetingPlatformChange, toggleMeetingPlatformChange] = useState<boolean>(false);
+    const [timesChange, toggleTimesChange] = useState<boolean>(false);
 
     useEffect(() => {
         if(authenticated===false) {
@@ -42,6 +47,10 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 setDiscipline(response.data.discipline.id);
                 setStreamingPlatform(response.data.streaming_platform);
                 setMeetingPlatform(response.data.meeting_platform);
+                setSubTime(response.data.sub_start);
+                setSubEnd(response.data.sub_stop);
+                setGameTime(response.data.games_start);
+                setGameEnd(response.data.games_stop);
             });
         axios({
             method: "get",
@@ -102,6 +111,34 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             });
     }
 
+    const handleChangeTimes = () => {
+        axios({
+            method: "post",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/dates/",
+            data: {
+                subTime: subTime,
+                subEnd: subEnd,
+                gameTime: gameTime,
+                gameEnd: gameEnd
+            },
+            withCredentials: true
+        })
+            .then(() => {
+                toggleTimesChange(false);
+            });
+    }
+
+    const handleDelete = () => {
+        axios({
+            method: "delete",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
+            withCredentials: true
+        })
+            .then(() => {
+                location.href = "/tournaments";
+            });
+    }
+
     return (
         <div>
             <h1>Tournament Settings</h1>
@@ -148,6 +185,22 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={handleChangeMeetingPlatform}>Save</button>
                     <button onClick={() => toggleMeetingPlatformChange(false)}>Cancel</button>
                 </>}
+                <p>Dates</p>
+                {!timesChange&&<>
+                    <p className="text">Subscriptions Start: {formatDate(tournament?.sub_start)}</p>
+                    <p className="text">Subscriptions End: {formatDate(tournament?.sub_stop)}</p>
+                    <p className="text">Games Start: {formatDate(tournament?.games_start)}</p>
+                    <p className="text">Games End: {formatDate(tournament?.games_stop)}</p>
+                    <button onClick={() => toggleTimesChange(true)}>Edit</button>
+                </>}
+                {timesChange&&<>
+                    <input type="datetime-local" value={new Date(subTime).toISOString().slice(0, 16)} onChange={e => setSubTime(new Date(e.target.value).getTime())}/>
+                    <input type="datetime-local" value={new Date(subEnd).toISOString().slice(0, 16)} onChange={e => setSubEnd(new Date(e.target.value).getTime())}/>
+                    <input type="datetime-local" value={new Date(gameTime).toISOString().slice(0, 16)} onChange={e => setGameTime(new Date(e.target.value).getTime())}/>
+                    <input type="datetime-local" value={new Date(gameEnd).toISOString().slice(0, 16)} onChange={e => setGameEnd(new Date(e.target.value).getTime())}/>
+                    <button onClick={handleChangeTimes}>Save</button>
+                    <button onClick={() => toggleTimesChange(false)}>Cancel</button>
+                </>}
             </div>
             <div className="card verticalscroll">
                 <p>Games</p>
@@ -158,7 +211,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                         <p>{game.score1} - {game.score2}</p>
                         <p>{formatDate(game.timestamp)}</p>
                         <div className="buttonrow">
-                        <Link href={"/game/"+game.id+"/edit"}><button>Edit</button></Link>
+                        <Link href={"/game/"+game.id+"/settings"}><button>Edit</button></Link>
                         <Link href={"/game/"+game.id+"/delete"}><button>Delete</button></Link>
                         </div>
                     </div></Link>)}
@@ -172,10 +225,11 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                         <ul>
                             {team.players.map((player: any) => <li key={player.id}>{player.user.name}</li>)}
                         </ul>
-                        <Link href={"/team/"+team.id+"/delete"}><button>Delete</button></Link>
+                        <Link href={"/team/"+team.id+"/delete"}><button>Disband</button></Link>
                     </div></Link>)}
                 </ul>
             </div>
+            <button onClick={handleDelete}>Cancel Tournament</button>
             <HomeLink/>
         </div>
     );
