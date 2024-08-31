@@ -23,7 +23,7 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
             axios.defaults.headers.common["Authorization"] = "Bearer "+token;
             axios({
                 method: 'get',
-                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user",
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/",
                 withCredentials: true
             })
                 .then((res: any) => {

@@ -12,6 +12,9 @@ export default function TournamentSearch () {
     const [completed, setCompleted] = useState<string>("");
     const [closed, setClosed] = useState<string>("");
     const [ascendant, setAscendant] = useState<boolean>(true);
+    const [disciplines, setDisciplines] = useState<any[]>([]);
+    const [selectedDiscipline, setSelectedDiscipline] = useState<string>("");
+    const [filteredTournaments, setFilteredTournaments] = useState<any[]>([]);
 
     type sortType = {
         id: string,
@@ -21,7 +24,7 @@ export default function TournamentSearch () {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const search = urlParams.get("query");
-        if(search) {
+        if(search!==null) {
             setSearch(search);
             axios({
                 method: 'get',
@@ -33,17 +36,51 @@ export default function TournamentSearch () {
                 })
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+        axios({
+            method: 'get',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/disciplines/",
+            withCredentials: true
+        })
+            .then(response => {
+                setDisciplines(response.data);
+            })
     }, []);
 
     useEffect(() => {
-        handleSearch();
-    }
-    , [completed, closed]);
+        const filtered = tournaments
+        .filter(tournament => {
+            if(search) {
+                return tournament.name.toLowerCase().includes(search.toLowerCase());
+            }
+            return true;
+        })
+        .filter(tournament => {
+            if(selectedDiscipline) {
+                return tournament.discipline.id === selectedDiscipline.split("=")[1];
+            }
+            return true;
+        })
+        .filter(tournament => {
+            if(completed) {
+                const now = new Date();
+                return new Date(tournament.games_stop).getTime() < now.getTime();
+            }
+            return true;
+        })
+        .filter(tournament => {
+            if(closed) {
+                const now = new Date();
+                return new Date(tournament.sub_stop).getTime() < now.getTime();
+            }
+            return true;
+        })
+        setFilteredTournaments(filtered);
+    }, [tournaments, search, selectedDiscipline, completed, closed]);
 
     const handleSearch = () => {
         axios({
             method: 'get',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+completed+closed,
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/?search="+search+completed+closed+selectedDiscipline,
             withCredentials: true
         })
             .then(response => {
@@ -93,6 +130,15 @@ export default function TournamentSearch () {
                     <option value="false">Descendant</option>
                 </select>
                 <select
+                    value={selectedDiscipline}
+                    onChange={e => setSelectedDiscipline(e.target.value)}
+                >
+                    <option value="">Discipline?</option>
+                    {disciplines.map(discipline => {
+                        return <option key={discipline.id} value={"&discipline="+discipline.id}>{discipline.name}</option>
+                    })}
+                </select>
+                <select
                     value={completed}
                     onChange={e => setCompleted(e.target.value)}
                 >
@@ -110,8 +156,8 @@ export default function TournamentSearch () {
                 </select>
                 <button onClick={handleSearch}>Search</button>
             </div>
-            {tournaments.length?<div>
-                {tournaments.sort((a, b) => {
+            {filteredTournaments.length?<div>
+                {filteredTournaments.sort((a, b) => {
                     if(sort.id) {
                         if(ascendant) {
                             return new Date(a[sort.id]).getTime() - new Date(b[sort.id]).getTime();

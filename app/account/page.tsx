@@ -35,6 +35,8 @@ export default function Account () {
         })
             .then((res) => {
                 setUserData(res.data);
+                setName(res.data.name);
+                setUsername(res.data.username);
             })
             .catch(() => {
             });
@@ -55,6 +57,10 @@ export default function Account () {
             withCredentials: true
         })
             .then(() => {
+                setMessage("Account deleted");
+                localStorage.removeItem("token");
+                setUser("");
+                setAuthenticated(false);
                 location.href = "/";
             });
     }

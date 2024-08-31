@@ -29,7 +29,6 @@ export default function GamePage ({ params }: { params: { game: string } }) {
         if(!team1 || !team2) {
             return <></>;
         }
-        console.log(team1, team2);
         return (
             <div className="card versus">
                 {team1.logo&&<img className="team" src={team1.logo} alt={team1.name}/>}

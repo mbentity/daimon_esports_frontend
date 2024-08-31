@@ -34,7 +34,6 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             withCredentials: true
         })
             .then(response => {
-                console.log(response.data);
                 setGame(response.data);
                 setTeam1(response.data.team1);
                 setTeam2(response.data.team2);
