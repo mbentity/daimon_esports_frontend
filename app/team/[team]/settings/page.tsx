@@ -137,6 +137,16 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         )
     }
 
+    const handleLogoDelete = () => {
+        axios({
+            method: 'delete',
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/logo/",
+            withCredentials: true
+        }).then(response => {
+            location.reload();
+        })
+    }
+
     return (
         <div>
             <h1>Team Settings</h1>
@@ -166,6 +176,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
                 <p>Logo</p>
                 {!logo&&team?.logo&&<img src={team.logo} alt="Team logo"/>}
                 {logo&&<><img src={URL.createObjectURL(logo)} alt="Team logo"/>
+                {logo||team?.logo&&<button onClick={handleLogoDelete}>Delete</button>}
                 <button onClick={handleLogoCancel}>Cancel</button>
                 <button onClick={handleLogoUpload}>Save</button>
                 </>}
