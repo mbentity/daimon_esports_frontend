@@ -10,7 +10,7 @@ export default function GameCreate ({ params }: { params: { tournament: string }
     const [tournament, setTournament] = useState<any>(null);
     const [team1, setTeam1] = useState<any>(null);
     const [team2, setTeam2] = useState<any>(null);
-    const [time, setTime] = useState<Date>();
+    const [time, setTime] = useState<string>("");
     const [minutes, setMinutes] = useState<number>();
 
     useEffect(() => {
@@ -37,7 +37,10 @@ export default function GameCreate ({ params }: { params: { tournament: string }
         const data = {
             team1: team1,
             team2: team2,
-            time: time?.toISOString(),
+            score1: 0,
+            score2: 0,
+            tournament: params.tournament,
+            timestamp: time,
             minutes: minutes
         }
         axios({
@@ -58,19 +61,19 @@ export default function GameCreate ({ params }: { params: { tournament: string }
                 <select className="form" onChange={(e) => setTeam1(e.target.value)}>
                     <option>Select Team 1</option>
                     {tournament&&tournament.teams.map((team: any) => {
-                        return <option value={team.id}>{team.name}</option>
+                        return <option key={team.id} value={team.id}>{team.name}</option>
                     })}
                 </select>
                 <select className="form" onChange={(e) => setTeam2(e.target.value)}>
                     <option>Select Team 2</option>
                     {tournament&&tournament.teams.map((team: any) => {
-                        return <option value={team.id}>{team.name}</option>
+                        return <option key={team.id} value={team.id}>{team.name}</option>
                     })}
                 </select>
             </div>
             <div className="formtab">
                 <label className="form" >Time:</label>
-                <input className="form" type="datetime-local" onChange={(e) => setTime(new Date(e.target.value))}/>
+                <input className="form" type="datetime-local" onChange={(e) => setTime(e.target.value)}/>
                 <input className="form" type="number" placeholder="Predicted Duration (in minutes)" onChange={(e) => setMinutes(parseInt(e.target.value))}/>
             </div>
             <button className="button" onClick={handlePost}>Create Game</button>

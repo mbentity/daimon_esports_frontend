@@ -282,10 +282,14 @@ a {
 }
 
 iframe {
+    width: 100vh;
+    height: 56.25vh;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 4vh;
+    margin: auto;
+    display: block;
+    border: none;
+    margin-top: 4vh;
+    margin-bottom: 20vh;
 }
 
 .games {
@@ -302,8 +306,16 @@ iframe {
     flex: 1;
 }
 
-.game:hover {
+.passed {
     background-color: var(--secondary);
+}
+
+.ongoing {
+    background-color: var(--error);
+}
+
+.game:hover {
+    background-color: var(--quaternary);
 }
 
 .game p {
@@ -429,4 +441,20 @@ iframe {
 .versus .vs {
     flex: 0;
     font-size: 15vh;
+}
+
+.versus .score {
+    max-width: 50vh;
+    height: auto;
+    flex: 1;
+    font-size: 20vh;
+    text-align: center;
+}
+
+.logo {
+    height: 20vw;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2vw;
 }

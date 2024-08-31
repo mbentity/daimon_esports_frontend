@@ -12,13 +12,13 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     const [ disciplines, setDisciplines ] = useState<any[]>([]);
 
     const [name, setName] = useState<string>("");
-    const [discipline, setDiscipline] = useState<any>();
+    const [discipline, setDiscipline] = useState<string>();
     const [streamingPlatform, setStreamingPlatform] = useState<string>("");
     const [meetingPlatform, setMeetingPlatform] = useState<string>("");
-    const [subTime, setSubTime] = useState<number>(0);
-    const [subEnd, setSubEnd] = useState<number>(0);
-    const [gameTime, setGameTime] = useState<number>(0);
-    const [gameEnd, setGameEnd] = useState<number>(0);
+    const [subTime, setSubTime] = useState<string>("");
+    const [subEnd, setSubEnd] = useState<string>("");
+    const [gameTime, setGameTime] = useState<string>("");
+    const [gameEnd, setGameEnd] = useState<string>("");
 
     const [nameChange, toggleNameChange] = useState<boolean>(false);
     const [disciplineChange, toggleDisciplineChange] = useState<boolean>(false);
@@ -61,12 +61,12 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 setDisciplines(res.data);
             }
         );
-    }, [user]);
+    }, [user, nameChange, disciplineChange, streamingPlatformChange, meetingPlatformChange, timesChange]);
 
     const handleChangeName = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/name/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/modify/name/",
             data: {name: name},
             withCredentials: true
         })
@@ -76,9 +76,12 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     }
 
     const handleChangeDiscipline = () => {
+        if(!discipline) {
+            return;
+        }
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/discipline/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/modify/discipline/",
             data: {discipline: discipline},
             withCredentials: true
         })
@@ -89,9 +92,9 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
 
     const handleChangeStreamingPlatform = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/stream/",
-            data: {streamingPlatform: streamingPlatform},
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/modify/streaming_platform/",
+            data: {streaming_platform: streamingPlatform},
             withCredentials: true
         })
             .then(() => {
@@ -101,9 +104,9 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
 
     const handleChangeMeetingPlatform = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/meet/",
-            data: {meetingPlatform: meetingPlatform},
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/modify/meeting_platform/",
+            data: {meeting_platform: meetingPlatform},
             withCredentials: true
         })
             .then(() => {
@@ -113,13 +116,13 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
 
     const handleChangeTimes = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/dates/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/modify/dates/",
             data: {
-                subTime: subTime,
-                subEnd: subEnd,
-                gameTime: gameTime,
-                gameEnd: gameEnd
+                sub_start: subTime,
+                sub_stop: subEnd,
+                games_start: gameTime,
+                games_stop: gameEnd
             },
             withCredentials: true
         })
@@ -131,7 +134,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
     const handleDelete = () => {
         axios({
             method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/delete/",
             withCredentials: true
         })
             .then(() => {
@@ -159,9 +162,12 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleDisciplineChange(true)}>Edit</button>
                 </>}
                 {disciplineChange&&<>
-                    <select onChange={e => setDiscipline(e.target.value)}>
-                        {disciplines.map((discipline: any) => <option key={discipline.id} value={discipline.id}>{discipline.name}</option>)}
-                    </select>
+                    <select className="form" onChange={(e) => setDiscipline(e.target.value)} value={discipline}>
+                    <option value="">Select Discipline</option>
+                    {disciplines.map(discipline =>
+                    <option key={discipline.id} value={discipline.id}>{discipline.name}</option>
+                    )}
+                </select>
                     <button onClick={handleChangeDiscipline}>Save</button>
                     <button onClick={() => toggleDisciplineChange(false)}>Cancel</button>
                 </>}
@@ -194,10 +200,10 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     <button onClick={() => toggleTimesChange(true)}>Edit</button>
                 </>}
                 {timesChange&&<>
-                    <input type="datetime-local" value={new Date(subTime).toISOString().slice(0, 16)} onChange={e => setSubTime(new Date(e.target.value).getTime())}/>
-                    <input type="datetime-local" value={new Date(subEnd).toISOString().slice(0, 16)} onChange={e => setSubEnd(new Date(e.target.value).getTime())}/>
-                    <input type="datetime-local" value={new Date(gameTime).toISOString().slice(0, 16)} onChange={e => setGameTime(new Date(e.target.value).getTime())}/>
-                    <input type="datetime-local" value={new Date(gameEnd).toISOString().slice(0, 16)} onChange={e => setGameEnd(new Date(e.target.value).getTime())}/>
+                    <input className="form" type="datetime-local" value={subTime.slice(0, 16)} onChange={e => setSubTime(e.target.value)}/>
+                    <input className="form" type="datetime-local" value={subEnd.slice(0, 16)} onChange={e => setSubEnd(e.target.value)}/>
+                    <input className="form" type="datetime-local" value={gameTime.slice(0, 16)} onChange={e => setGameTime(e.target.value)}/>
+                    <input className="form" type="datetime-local" value={gameEnd.slice(0, 16)} onChange={e => setGameEnd(e.target.value)}/>
                     <button onClick={handleChangeTimes}>Save</button>
                     <button onClick={() => toggleTimesChange(false)}>Cancel</button>
                 </>}
@@ -219,6 +225,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             </div>
             <div className="card verticalscroll">
                 <p>Teams</p>
+                {tournament?.teams.length===0&&<p className="text">No teams</p>}
                 <ul>
                     {tournament?.teams.map((team: any) => <Link href={"/team/"+team.id}><div key={team.id} className="cardobject">
                         <p>{team.name} ({team.tag})</p>
@@ -229,7 +236,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                     </div></Link>)}
                 </ul>
             </div>
-            <button onClick={handleDelete}>Cancel Tournament</button>
+            <button className="button" onClick={handleDelete}>Cancel Tournament</button>
             <HomeLink/>
         </div>
     );

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useGlobalContext } from "./Context/store";
 
@@ -60,25 +60,65 @@ export const GameFetcher = () => {
 }
 
 export const GameViewer = ({games}:{games: any}) => {
+    const [highlightedGame, setHighlightedGame] = useState<any>(null);
+
+    useEffect(() => {
+        const lastGame = games.filter((game: any) => {
+            const endTimestamp = new Date(game.timestamp).getTime()+game.minutes*60000;
+            const currentTimestamp = new Date().getTime();
+            return currentTimestamp>endTimestamp;
+        }).sort((a: any, b: any) => {
+            return new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime();
+        })[0];
+        const gameInProgress = games.find((game: any) => checkGameInProgress(game));
+        const nextGame = games.find((game: any) => {
+            const startTimestamp = new Date(game.timestamp).getTime();
+            const currentTimestamp = new Date().getTime();
+            return currentTimestamp<startTimestamp;
+        });
+
+        if(gameInProgress) setHighlightedGame(gameInProgress);
+        else if(nextGame) setHighlightedGame(nextGame);
+        else if(lastGame) setHighlightedGame(lastGame);
+        else setHighlightedGame(games[0]);
+
+        console.log(highlightedGame);
+    }, [games]);
 
     const checkGameInProgress = (game: any) => {
-        if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
-        }
-        return new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime();
+        const startTimestamp = new Date(game.timestamp).getTime();
+        const endTimestamp = startTimestamp+game.minutes*60000;
+        const currentTimestamp = new Date().getTime();
+        return currentTimestamp>startTimestamp&&currentTimestamp<endTimestamp;
     }
 
     return <>
-    <GameTimeline games={games}/>
+    <GameTimeline games={games} highlighted={highlightedGame?.id}/>
     <StreamIframe url={
-        games.find((game: any) => checkGameInProgress(game))?.tournament?.streaming_platform
+        highlightedGame?.tournament?.streaming_platform
     }/>
     </>
 }
 
-export const GameTimeline = ({games}:{games: any}) => {
-    return <div className="games">
+export const GameTimeline = ({games, highlighted}:{games: any, highlighted: string}) => {
+    const timelineRef = useRef<HTMLDivElement>(null);
+    const hlGameElement = useRef<HTMLDivElement>(null);
+
+    if(timelineRef.current&&hlGameElement.current) {
+        const timeline = timelineRef.current;
+        const hlGame = hlGameElement.current;
+
+        const timelineRect = timeline.getBoundingClientRect();
+        const hlGameRect = hlGame.getBoundingClientRect();
+
+        const offset = hlGameRect.left-timelineRect.left;
+        timeline.scrollTo({ left: offset, behavior: "smooth" });
+    }
+
+    return <div className="games" ref={timelineRef}>
         {games.map((game: any, index: any) => {
-            return <div key={index}>
+            const isHighlighted = game.id===highlighted;
+            return <div key={index} ref={isHighlighted?hlGameElement:null}>
                 <Game game={game}/>
             </div>
         })}
@@ -86,8 +126,19 @@ export const GameTimeline = ({games}:{games: any}) => {
 }
 
 export const Game = ({game}:{game: any}) => {
+    const checkGamePassed = (game: any) => {
+        const endTimestamp = new Date(game.timestamp).getTime()+game.minutes*60000;
+        const currentTimestamp = new Date().getTime();
+        return currentTimestamp>endTimestamp;
+    }
+    const checkGameInProgress = (game: any) => {
+        const startTimestamp = new Date(game.timestamp).getTime();
+        const endTimestamp = startTimestamp+game.minutes*60000;
+        const currentTimestamp = new Date().getTime();
+        return currentTimestamp>startTimestamp&&currentTimestamp<endTimestamp;
+    }
     return <Link href={"/game/"+game.id}>
-        <div className="game">
+        <div className={"game"+(checkGameInProgress(game)?" ongoing":"")+(checkGamePassed(game)?" passed":"")}>
             <p>{game.team1.tag} vs {game.team2.tag}</p>
             <p>{game.score1} - {game.score2}</p>
             <p>{formatDate(game.timestamp)}</p>
@@ -104,8 +155,6 @@ export const StreamIframe = ({url}:{url: string}) => {
         const channel = url.split("twitch.tv/")[1];
         return <iframe
             src={`https://player.twitch.tv/?channel=${channel}&parent=${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}`}
-            height="720"
-            width="1280"
             allowFullScreen={true}>
         </iframe>
     }
@@ -113,8 +162,6 @@ export const StreamIframe = ({url}:{url: string}) => {
         const video = url.split("v=")[1];
         return <iframe
             src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=1`}
-            height="720"
-            width="1280"
             allow="autoplay; encrypted-media"
             allowFullScreen={true}>
         </iframe>

@@ -63,7 +63,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     const handleDelete = () => {
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/delete/",
             withCredentials: true
         }).then(response => {
             location.href = "/account";
@@ -76,7 +76,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         }
         axios({
             method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/",
             withCredentials: true,
             data: {
                 name: name,
@@ -90,7 +90,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     const handleTransferOwnership = (player: string) => {
         axios({
             method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/transferownership/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/transferownership/",
             withCredentials: true,
             data: {
                 newOwner: player
@@ -103,7 +103,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     const handleKick = (player: string) => {
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player+"/delete/",
             withCredentials: true,
         }).then(response => {
             location.reload();
@@ -128,7 +128,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
         formData.append("logo", logo);
         axios({
             method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/logo/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/logo/",
             withCredentials: true,
             data: formData
         }).then(response => {
@@ -140,7 +140,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     const handleLogoDelete = () => {
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/logo/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/logo/",
             withCredentials: true
         }).then(response => {
             location.reload();
@@ -176,7 +176,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
                 <p>Logo</p>
                 {!logo&&team?.logo&&<img src={team.logo} alt="Team logo"/>}
                 {logo&&<><img src={URL.createObjectURL(logo)} alt="Team logo"/>
-                {logo||team?.logo&&<button onClick={handleLogoDelete}>Delete</button>}
+                {logo!==null||team?.logo&&<button onClick={handleLogoDelete}>Delete</button>}
                 <button onClick={handleLogoCancel}>Cancel</button>
                 <button onClick={handleLogoUpload}>Save</button>
                 </>}

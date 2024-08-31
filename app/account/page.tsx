@@ -53,7 +53,7 @@ export default function Account () {
     const handleDeleteAccount = () => {
         axios({
             method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/delete/",
             withCredentials: true
         })
             .then(() => {
@@ -68,7 +68,7 @@ export default function Account () {
     const handleChangeName = () => {
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/name/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/modify/name/",
             withCredentials: true,
             data: {
                 name: name
@@ -80,9 +80,12 @@ export default function Account () {
     }
 
     const handleChangeUsername = () => {
+        if(!password) {
+            return;
+        }
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/username/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/modify/username/",
             withCredentials: true,
             data: {
                 username: username,
@@ -100,7 +103,7 @@ export default function Account () {
         }
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/password/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/modify/password/",
             withCredentials: true,
             data: {
                 password: password,

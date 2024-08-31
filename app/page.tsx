@@ -9,8 +9,8 @@ export default function Home () {
 	const { setMessage, authenticated, setPopup } = useGlobalContext();
 
 	useEffect(() => {
-		setMessage("Welcome to Daimon Esports!");
-		setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
+		//setMessage("Welcome to Daimon Esports!");
+		//setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
 	}
 	, []);
 

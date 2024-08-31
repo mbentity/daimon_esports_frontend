@@ -13,7 +13,7 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
     const [team2, setTeam2] = useState<any>();
     const [score1, setScore1] = useState<number>();
     const [score2, setScore2] = useState<number>();
-    const [time, setTime] = useState<Date>();
+    const [time, setTime] = useState<string>("");
     const [minutes, setMinutes] = useState<number>();
 
     const [teamsChange, toggleTeamsChange] = useState<boolean>(false);
@@ -37,7 +37,9 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
                 setGame(response.data);
                 setTeam1(response.data.team1);
                 setTeam2(response.data.team2);
-                setTime(new Date(response.data.timestamp));
+                setScore1(response.data.score1);
+                setScore2(response.data.score2);
+                setTime(response.data.timestamp);
                 setMinutes(response.data.minutes);
                 axios({
                     method: "get",
@@ -48,12 +50,12 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
                         setTournament(response.data);
                     });
             });
-    }, []);
+    }, [teamsChange, scoreChange, timeChange, minutesChange]);
 
     const handleChangeTeams = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/teams/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/modify/teams/",
             withCredentials: true,
             data: {
                 team1: team1,
@@ -67,8 +69,8 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
 
     const handleChangeScore = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/score/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/modify/score/",
             withCredentials: true,
             data: {
                 score1: score1,
@@ -82,11 +84,11 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
 
     const handleChangeTime = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/time/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/modify/time/",
             withCredentials: true,
             data: {
-                time: time?.toISOString()
+                timestamp: time
             },
         })
             .then(() => {
@@ -96,8 +98,8 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
 
     const handleChangeMinutes = () => {
         axios({
-            method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/minutes/",
+            method: "put",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/modify/minutes/",
             withCredentials: true,
             data: {
                 minutes: minutes
@@ -111,7 +113,7 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
     const handleDelete = () => {
         axios({
             method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/games/"+game.id+"/delete/",
             withCredentials: true
         })
             .then(() => {
@@ -163,7 +165,7 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
                     <button onClick={() => toggleTimeChange(true)}>Edit</button>
                 </>}
                 {timeChange && <>
-                    <input type="datetime-local" value={time?.toISOString().slice(0, 16)} onChange={(e) => setTime(new Date(e.target.value))}/>
+                    <input className="form" type="datetime-local" value={time.slice(0, 16)} onChange={(e) => setTime(e.target.value)}/>
                     <button onClick={handleChangeTime}>Save</button>
                     <button onClick={() => toggleTimeChange(false)}>Cancel</button>
                 </>}

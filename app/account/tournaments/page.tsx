@@ -24,8 +24,9 @@ export default function AccountTournaments () {
         })
             .then((res) => {
                 setTournaments(res.data);
-            }
-        );
+            })
+            .catch((err) => {
+            });
     }, []);
 
     return (

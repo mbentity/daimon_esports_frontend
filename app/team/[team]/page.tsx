@@ -12,6 +12,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
     const [team, setTeam] = useState<any>(null);
     const [games, setGames] = useState<any>(null);
     const [isMember, setIsMember] = useState<boolean>(false);
+    const [isOwner, setIsOwner] = useState<boolean>(false);
 
     useEffect(() => {
         axios({
@@ -21,6 +22,9 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         })
             .then(response => {
                 setTeam(response.data);
+                if(user&&response.data.user.id===user) {
+                    setIsOwner(true);
+                }
                 combineGames(response.data.team1,response.data.team2);
                 axios({
                     method: "get",
@@ -30,8 +34,11 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
                     .then(response => {
                         setCanJoin(response.data);
                     })
+                    .catch(error => {
+                        setCanJoin(false);
+                    })
             })
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if(user && team) {
@@ -67,7 +74,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         const playerId = team.players.filter((player: any) => player.user.id===user)[0].id;
         axios({
             method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+playerId+"/",
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+playerId+"/delete/",
             withCredentials: true
         }).then(response => {
             setIsMember(false);
@@ -78,11 +85,12 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         <div>
             <h1>{team?.name}</h1>
             {games&&<GameTimeline games={games}/>}
+            <img className="logo" src={team?.logo} alt={team?.name}/>
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>
                 <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>
                 {canJoin && <button onClick={handleJoin}>Request to join</button>}
-                {isMember && <button onClick={handleLeave}>Leave team</button>}
+                {isMember && !isOwner && <button onClick={handleLeave}>Leave team</button>}
                 {user&&user===team?.user.id&&<Link href={"/team/"+team?.id+"/settings"}><button>Team Settings</button></Link>}
             </div>
             <div className="card">

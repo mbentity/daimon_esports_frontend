@@ -50,10 +50,7 @@ export default function AccountInbox () {
     const handleAccept = (request: any) => {
         axios({
             method: "post",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/accept/",
-            data: {
-                id: request.id
-            },
+            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/requests/"+request.id+"/accept/",
             withCredentials: true
         })
             .then(() => {

@@ -36,6 +36,16 @@ export default function TournamentSearch () {
                 })
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+        else {
+            axios({
+                method: 'get',
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/search/",
+                withCredentials: true
+            })
+                .then(response => {
+                    setTournaments(response.data);
+                })
+        }
         axios({
             method: 'get',
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/disciplines/",
@@ -50,7 +60,7 @@ export default function TournamentSearch () {
         const filtered = tournaments
         .filter(tournament => {
             if(search) {
-                return tournament.name.toLowerCase().includes(search.toLowerCase());
+                return tournament.name.toLowerCase().includes(search.toLowerCase()) || tournament.discipline.name.toLowerCase().includes(search.toLowerCase());
             }
             return true;
         })
@@ -97,7 +107,7 @@ export default function TournamentSearch () {
     const TournamentCard = ({tournament}:{tournament: any}) => {
         return <div className="card">
             <Link href={"/tournament/"+tournament.id}>
-                <h1>{tournament.name}</h1>
+                <h1 className="gamelink">{tournament.name}</h1>
             </Link>
             <h2>{tournament.discipline.name}</h2>
         </div>
@@ -117,23 +127,23 @@ export default function TournamentSearch () {
                     value={sort.id}
                     onChange={e => setSort({id: e.target.value, name: e.target.selectedOptions[0].text})}
                 >
-                    <option value="games_start">Tournament Start</option>
-                    <option value="games_stop">Tournament End</option>
-                    <option value="sub_start">Subscriptions Start</option>
-                    <option value="sub_stop">Subscriptions End</option>
+                    <option value="games_start">Sort by Games Start</option>
+                    <option value="games_stop">Sort by Games End</option>
+                    <option value="sub_start">Sort by Subscriptions Start</option>
+                    <option value="sub_stop">Sort by Subscriptions End</option>
                 </select>
                 <select
                     value={ascendant.toString()}
                     onChange={e => setAscendant(e.target.value==="true")}
                 >
-                    <option value="true">Ascendant</option>
-                    <option value="false">Descendant</option>
+                    <option value="true">In Ascendant Order</option>
+                    <option value="false">In Descendant Order</option>
                 </select>
                 <select
                     value={selectedDiscipline}
                     onChange={e => setSelectedDiscipline(e.target.value)}
                 >
-                    <option value="">Discipline?</option>
+                    <option value="">Any Discipline</option>
                     {disciplines.map(discipline => {
                         return <option key={discipline.id} value={"&discipline="+discipline.id}>{discipline.name}</option>
                     })}
@@ -142,20 +152,20 @@ export default function TournamentSearch () {
                     value={completed}
                     onChange={e => setCompleted(e.target.value)}
                 >
-                    <option value="">Completed?</option>
+                    <option value="">All Time</option>
                     <option value="&completed=true">Completed</option>
-                    <option value="&completed=false">Not Completed</option>
+                    <option value="&completed=false">Running</option>
                 </select>
                 <select
                     value={closed}
                     onChange={e => setClosed(e.target.value)}
                 >
-                    <option value="">Closed?</option>
-                    <option value="&closed=true">Closed</option>
-                    <option value="&closed=false">Not Closed</option>
+                    <option value="">All Statuses</option>
+                    <option value="&closed=true">Subscriptions Closed</option>
+                    <option value="&closed=false">Subscriptions Open</option>
                 </select>
-                <button onClick={handleSearch}>Search</button>
             </div>
+            <button className="button" onClick={handleSearch}>Search</button>
             {filteredTournaments.length?<div>
                 {filteredTournaments.sort((a, b) => {
                     if(sort.id) {

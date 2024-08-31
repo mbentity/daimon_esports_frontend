@@ -35,7 +35,9 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
             .then(response => {
                 setCanCreate(response.data);
             })
-            .catch((error: any) => {
+            .catch(error => {
+                console.log(error);
+                setCanCreate(false);
             })
     }, [user]);
 
@@ -59,8 +61,20 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                 standings.find((standing: any) => standing.team===match.team1.id).losses++;
             }
         });
-        // sort standings by wins
-        standings.sort((a: any, b: any) => b.wins-a.wins);
+        // sort standings by wins and losses
+        standings.sort((a: any, b: any) => {
+            if(a.wins>b.wins) {
+                return -1;
+            } else if(a.wins<b.wins) {
+                return 1;
+            }
+            if(a.losses<b.losses) {
+                return -1;
+            } else if(a.losses>b.losses) {
+                return 1;
+            }
+            return 0;
+        });
         return standings;
     }
 
@@ -73,11 +87,13 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                 <ul>
                     {tournament && calculateStandings(tournament?.games, tournament?.teams).map((standing: any) => {
                         return (
-                            <li key={standing.team}>
-                                <Link href={"/team/"+tournament?.teams.find((team: any) => team.id===standing.team).id}><button>{tournament?.teams.find((team: any) => team.id===standing.team).name}</button></Link>
-                                <p>Wins: {standing.wins}</p>
-                                <p>Losses: {standing.losses}</p>
-                            </li>
+                            <div className="cardobject" key={standing.team}>
+                                <Link href={"/team/"+tournament?.teams.find((team: any) => team.id===standing.team).id}>
+                                    {tournament?.teams.find((team: any) => team.id===standing.team).logo&&<img className="team" src={tournament?.teams.find((team: any) => team.id===standing.team).logo} alt={tournament?.teams.find((team: any) => team.id===standing.team).name}/>}
+                                    <p className="gamelink">{tournament?.teams.find((team: any) => team.id===standing.team).name}</p>
+                                </Link>
+                                <p>&emsp;{standing.wins} - {standing.losses}</p>
+                            </div>
                         );
                     })}
                 </ul>

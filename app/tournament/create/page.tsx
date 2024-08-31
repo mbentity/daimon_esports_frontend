@@ -9,7 +9,7 @@ export default function TournamentCreate () {
     const { authenticated } = useGlobalContext();
     const [ disciplines, setDisciplines ] = useState<any[]>([]);
     const [ name, setName ] = useState<string>();
-    const [ discipline, setDiscipline ] = useState<any>();
+    const [ discipline, setDiscipline ] = useState<string>();
     const [ teamCount, setTeamCount ] = useState<number>();
     const [ playerCount, setPlayerCount ] = useState<number>();
     const [ meetingPlatform, setMeetingPlatform ] = useState<string>();
@@ -68,7 +68,10 @@ export default function TournamentCreate () {
             <div className="formtab">
                 <input className="form" type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
                 <select className="form" onChange={(e) => setDiscipline(e.target.value)}>
-                    {disciplines.map(discipline => <option key={discipline.id} value={discipline.id}>{discipline.name}</option>)}
+                    <option value="">Select Discipline</option>
+                    {disciplines.map(discipline =>
+                    <option key={discipline.id} value={discipline.id}>{discipline.name}</option>
+                    )}
                 </select>
                 <input className="form" type="number" placeholder="Team Count" onChange={(e) => setTeamCount(parseInt(e.target.value))} />
                 <input className="form" type="number" placeholder="Player Count" onChange={(e) => setPlayerCount(parseInt(e.target.value))} />
