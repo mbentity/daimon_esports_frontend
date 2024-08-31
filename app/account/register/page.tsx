@@ -7,7 +7,7 @@ import { HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 
 export default function AccountRegister () {
-    const { authenticated } = useGlobalContext();
+    const { setNotification, authenticated } = useGlobalContext();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -44,12 +44,17 @@ export default function AccountRegister () {
                     withCredentials: true
                 })
                     .then((response) => {
+                        setNotification("Registered and logged in!");
                         const token = response.data.access;
                         const refreshToken = response.data.refresh;
                         localStorage.setItem("token", token);
                         localStorage.setItem("refreshToken", refreshToken);
                         location.href = "/account";
                     });
+            })
+            .catch((error) => {
+                console.log(error);
+                setNotification("Invalid registration: "+error.response.data);
             });
     };
    

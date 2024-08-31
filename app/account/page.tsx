@@ -1,5 +1,7 @@
 "use client"
 
+//setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
+
 import { HomeLink } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import { useEffect, useState } from "react";
@@ -7,7 +9,7 @@ import axios from "axios";
 import Link from "next/link";
 
 export default function Account () {
-    const { setMessage, setUser, authenticated, setAuthenticated } = useGlobalContext();
+    const { setPopup, setNotification, setUser, authenticated, setAuthenticated } = useGlobalContext();
     const [userData, setUserData] = useState<any>();
 
     const [name, setName] = useState<string>("");
@@ -43,26 +45,30 @@ export default function Account () {
     }, [nameChange, usernameChange, passwordChange]);
 
     const handleLogout = () => {
-        setMessage("Logged out");
         localStorage.removeItem("token");
-        setUser("");
-        setAuthenticated(false);
-        location.href = "/account/login";
+        setPopup({text: "Logged out", buttons: [{text: "OK", action: () => {
+            setUser("");
+            setAuthenticated(false);
+            location.href = "/account/login";
+        }}], default: null});
     };
 
     const handleDeleteAccount = () => {
-        axios({
-            method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/delete/",
-            withCredentials: true
-        })
-            .then(() => {
-                setMessage("Account deleted");
-                localStorage.removeItem("token");
-                setUser("");
-                setAuthenticated(false);
-                location.href = "/";
-            });
+        setPopup({text: "Are you sure you want to delete your account?", buttons: [{text: "Yes", action: () => {
+            axios({
+                method: "delete",
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/user/delete/",
+                withCredentials: true
+            })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    setPopup({text: "Account deleted", buttons: [{text: "OK", action: () => {
+                        setUser("");
+                        setAuthenticated(false);
+                        location.href = "/";
+                    }}], default: null});
+                });
+        }}], default: "No"});
     }
 
     const handleChangeName = () => {
@@ -75,12 +81,18 @@ export default function Account () {
             }
         })
             .then(() => {
+                setNotification("Name changed!");
                 toggleNameChange(false);
             })
+            .catch((error) => {
+                console.log(error);
+                setNotification("Invalid name change: "+error.response.data); 
+            });
     }
 
     const handleChangeUsername = () => {
         if(!password) {
+            setNotification("Please enter your password.");
             return;
         }
         axios({
@@ -93,12 +105,22 @@ export default function Account () {
             }
         })
             .then(() => {
+                setNotification("Username changed");
                 toggleUsernameChange(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setNotification("Invalid username change: "+error.response.data);
             });
     }
 
     const handleChangePassword = () => {
+        if(!password) {
+            setNotification("Please enter your current password.");
+            return;
+        }
         if(newPassword !== confirmNewPassword) {
+            setNotification("Passwords do not match");
             return;
         }
         axios({
@@ -111,7 +133,12 @@ export default function Account () {
             }
         })
             .then(() => {
+                setNotification("Password changed!");
                 togglePasswordChange(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setNotification("Invalid password change: "+error.response.data);
             });
     }
 

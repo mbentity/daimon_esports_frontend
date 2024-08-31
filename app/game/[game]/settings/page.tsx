@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function GameSettings ({ params }: { params: { game: string } }) {
-    const { authenticated } = useGlobalContext();
+    const { setNotification, authenticated } = useGlobalContext();
     const [game, setGame] = useState<any>(null);
     const [tournament, setTournament] = useState<any>(null);
     const [team1, setTeam1] = useState<any>();
@@ -63,7 +63,11 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             },
         })
             .then(() => {
+                setNotification("Teams updated!");
                 toggleTeamsChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating teams: "+err.response.data);
             });
     }
 
@@ -78,7 +82,11 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             },
         })
             .then(() => {
+                setNotification("Score updated!");
                 toggleScoreChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating score: "+err.response.data);
             });
     }
 
@@ -92,7 +100,11 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             },
         })
             .then(() => {
+                setNotification("Time and date updated!");
                 toggleTimeChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating time: "+err.response.data);
             });
     }
 
@@ -106,7 +118,11 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             },
         })
             .then(() => {
+                setNotification("Estimated duration updated!");
                 toggleMinutesChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating duration: "+err.response.data);
             });
     }
 
@@ -117,6 +133,7 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Game deleted!");
                 location.href = "/tournament/"+tournament.id+"/settings";
             });
     }

@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function GameCreate ({ params }: { params: { tournament: string } }) {
-    const { user, authenticated } = useGlobalContext();
+    const { setNotification, user, authenticated } = useGlobalContext();
     const [tournament, setTournament] = useState<any>(null);
     const [team1, setTeam1] = useState<any>(null);
     const [team2, setTeam2] = useState<any>(null);
@@ -50,7 +50,12 @@ export default function GameCreate ({ params }: { params: { tournament: string }
             withCredentials: true
         })
             .then(() => {
+                setNotification("Game created!");
                 location.href = "/tournament/"+params.tournament+"/settings";
+            })
+            .catch((error) => {
+                console.log(error);
+                setNotification("Invalid game creation: "+error.response.data);
             });
     }
 

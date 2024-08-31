@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function TeamCreate ({ params }: { params: { tournament: string } }) {
-    const { user, authenticated } = useGlobalContext();
+    const { setNotification, setPopup, user, authenticated } = useGlobalContext();
     const [tournament, setTournament] = useState<any>(null);
     const [name, setName] = useState<string>("");
     const [tag, setTag] = useState<string>("");
@@ -66,6 +66,7 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
 
     const handleCreate = () => {
         if(!checkTagInName() || !checkTagLength()) {
+            setNotification("Invalid tag: must be "+maxTagLength+" characters included in the name or less.");
             return;
         }
         axios({
@@ -79,9 +80,11 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
             withCredentials: true
         })
             .then(() => {
+                setNotification("Team created!");
                 location.href = "/tournament/"+params.tournament;
             })
             .catch(err => {
+                setNotification("Error creating team: "+err.response.data);
             });
     }
 

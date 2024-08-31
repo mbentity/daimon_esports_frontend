@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function TournamentCreate () {
-    const { authenticated } = useGlobalContext();
+    const { setNotification, authenticated } = useGlobalContext();
     const [ disciplines, setDisciplines ] = useState<any[]>([]);
     const [ name, setName ] = useState<string>();
     const [ discipline, setDiscipline ] = useState<string>();
@@ -57,8 +57,12 @@ export default function TournamentCreate () {
             withCredentials: true
         })
             .then(() => {
+                setNotification("Tournament created!");
                 location.href = "/account/tournaments";
             })
+            .catch((error) => {
+                setNotification("Invalid tournament creation: "+error.response.data);
+            });
     }
 
 

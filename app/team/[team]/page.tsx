@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function TeamPage ({ params }: { params: { team: string } }) {
-	const { user } = useGlobalContext();
+	const { setNotification, setPopup, user } = useGlobalContext();
     const [canJoin, setCanJoin] = useState<boolean>(false);
     const [team, setTeam] = useState<any>(null);
     const [games, setGames] = useState<any>(null);
@@ -66,25 +66,41 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
                 team: team.id
             }
         }).then(response => {
+            setNotification("Request sent.");
             setCanJoin(false);
+        })
+        .catch(error => {
+            setNotification("Error sending request: "+error.response.data);
         })
     }
 
     const handleLeave = () => {
         const playerId = team.players.filter((player: any) => player.user.id===user)[0].id;
-        axios({
-            method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+playerId+"/delete/",
-            withCredentials: true
-        }).then(response => {
-            setIsMember(false);
-        })
+        setPopup({
+            text: "Are you sure you want to leave this team?",
+            buttons: [
+                {text: "Yes", action: () => {
+                    axios({
+                        method: 'delete',
+                        url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+playerId+"/delete/",
+                        withCredentials: true
+                    }).then(response => {
+                        setNotification("Left team.");
+                        setIsMember(false);
+                    })
+                    .catch(error => {
+                        setNotification("Error leaving team: "+error.response.data);
+                    })
+                }}
+            ],
+            default: "No"
+        });
     }
 
     return (
         <div>
             <h1>{team?.name}</h1>
-            {games&&<GameTimeline games={games}/>}
+            {games&&<GameTimeline games={games} highlighted=""/>}
             <img className="logo" src={team?.logo} alt={team?.name}/>
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>

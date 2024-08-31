@@ -174,12 +174,12 @@ export const formatDate = (date: string) => {
 }
 
 export const Notification = () => {
-    const { message } = useGlobalContext();
+    const { notification, setNotification } = useGlobalContext();
     useEffect(() => {
-        if(message) {
+        if(notification) {
             show();
         }
-    }, [message]);
+    }, [notification]);
     const show = () => {
         const x = document.getElementById(`notification`)
 		if(x)
@@ -187,11 +187,12 @@ export const Notification = () => {
 			x.className = `show`
 			setTimeout(() => {
 				x.className = x.className.replace(`show`, ``)
+                setNotification("");
 			}, 3000)
 		}
     }
     return <div id='notification'>
-        {message}
+        {notification}
     </div>
 }
 
@@ -220,11 +221,15 @@ export const Popup = () => {
             x.className = x.className.replace(`show`, ``)
         }
     }
+    const handleAction = (action: any) => {
+        action();
+        setPopup(null);
+    }
     return <div id='popup'>
         <div id='popupcontent'>
             <p>{popup?.text}</p>
             {popup?.buttons.map((button: any, index: number) => {
-                return <button key={index} onClick={button.action}>{button.text}</button>
+                return <button key={index} onClick={() => handleAction(button.action)}>{button.text}</button>
             })}
             {popup?.default&&<button onClick={() => setPopup(null)}>{popup.default}</button>}
         </div>

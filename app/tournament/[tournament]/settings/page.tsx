@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function TournamentSettings ({ params }: { params: { tournament: string } }) {
-    const { user, authenticated } = useGlobalContext();
+    const { setNotification, setPopup, user, authenticated } = useGlobalContext();
     const [tournament, setTournament] = useState<any>(null);
     const [ disciplines, setDisciplines ] = useState<any[]>([]);
 
@@ -71,7 +71,11 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Name updated!");
                 toggleNameChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating name: "+err.response.data);
             });
     }
 
@@ -86,7 +90,11 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Discipline updated!");
                 toggleDisciplineChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating discipline: "+err.response.data);
             });
     }
 
@@ -98,7 +106,11 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Streaming platform updated!");
                 toggleStreamingPlatformChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating streaming platform: "+err.response.data);
             });
     }
 
@@ -110,7 +122,11 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Meeting platform updated!");
                 toggleMeetingPlatformChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating meeting platform: "+err.response.data);
             });
     }
 
@@ -127,19 +143,35 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
             withCredentials: true
         })
             .then(() => {
+                setNotification("Dates updated!");
                 toggleTimesChange(false);
+            })
+            .catch((err) => {
+                setNotification("Error updating dates: "+err.response.data);
             });
     }
 
     const handleDelete = () => {
-        axios({
-            method: "delete",
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/delete/",
-            withCredentials: true
-        })
-            .then(() => {
-                location.href = "/tournaments";
-            });
+        setPopup({
+            text: "Are you sure you want to cancel this tournament?",
+            buttons: [{text: "Yes", action: () => {
+                axios({
+                    method: "delete",
+                    url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/tournaments/"+params.tournament+"/delete/",
+                    withCredentials: true
+                })
+                    .then(() => {
+                        setPopup({text: "Tournament cancelled", buttons: [{text: "OK", action: () => {
+                        location.href = "/tournaments";
+                    }
+                    }], default: null});
+                    })
+                    .catch((err) => {
+                        setNotification("Error cancelling tournament: "+err.response.data);
+                    });
+                }}],
+            default: "No"
+        });
     }
 
     return (

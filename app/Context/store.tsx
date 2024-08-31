@@ -7,10 +7,10 @@ export interface Context {
 	setAuthenticated: Dispatch<SetStateAction<boolean | null>>;
 	user: string;
 	setUser: Dispatch<SetStateAction<string>>;
-	message: string;
-	setMessage: Dispatch<SetStateAction<string>>;
-	popup: {text: string, buttons: {text: string, action: any}[], default: string} | null;
-	setPopup: Dispatch<SetStateAction<{text: string, buttons: {text: string, action: any}[], default: string} | null>>;
+	notification: string;
+	setNotification: Dispatch<SetStateAction<string>>;
+	popup: {text: string, buttons: {text: string, action: any}[], default: string | null} | null;
+	setPopup: Dispatch<SetStateAction<{text: string, buttons: {text: string, action: any}[], default: string | null} | null>>;
 }
 
 const GlobalContext = createContext<Context>({
@@ -18,8 +18,8 @@ const GlobalContext = createContext<Context>({
 	setAuthenticated: () => {},
 	user: "",
 	setUser: () => {},
-	message: "",
-	setMessage: () => {},
+	notification: "",
+	setNotification: () => {},
 	popup: null,
 	setPopup: () => {}
 });
@@ -27,8 +27,8 @@ const GlobalContext = createContext<Context>({
 export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [authenticated, setAuthenticated]: [boolean | null, Dispatch<SetStateAction<boolean | null>>] = useState(null as boolean | null);
 	const [user, setUser]: [string, Dispatch<SetStateAction<string>>] = useState("");
-	const [message, setMessage]: [string, Dispatch<SetStateAction<string>>] = useState("");
-	const [popup, setPopup] = useState<{text: string, buttons: {text: string, action: any}[], default: string} | null>(null);
+	const [notification, setNotification]: [string, Dispatch<SetStateAction<string>>] = useState("");
+	const [popup, setPopup] = useState<{text: string, buttons: {text: string, action: any}[], default: string | null} | null>(null);
 
 	return (
 		<GlobalContext.Provider value={{
@@ -36,8 +36,8 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
 			setAuthenticated,
 			user,
 			setUser,
-			message,
-			setMessage,
+			notification,
+			setNotification,
 			popup,
 			setPopup
 		}}>

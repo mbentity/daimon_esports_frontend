@@ -6,10 +6,10 @@ import { useGlobalContext } from "./Context/store";
 import { GameFetcher } from "./commons";
 
 export default function Home () {
-	const { setMessage, authenticated, setPopup } = useGlobalContext();
+	const { setNotification, authenticated, setPopup } = useGlobalContext();
 
 	useEffect(() => {
-		//setMessage("Welcome to Daimon Esports!");
+		//setNotification("Welcome to Daimon Esports!");
 		//setPopup({text: "Are you sure?", buttons: [{text: "Yes", action: () => console.log("yes")}, {text: "No", action: () => console.log("no")}], default: "Cancel"});
 	}
 	, []);
@@ -20,7 +20,7 @@ export default function Home () {
 		const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 			if (event.key === 'Enter') {
 				if (search.trim() !== '') {
-					window.location.href = `/tournament/search/?query=${encodeURIComponent(search)}`;
+					location.href = `/tournament/search/?query=${encodeURIComponent(search)}`;
 				}
 			}
 		};

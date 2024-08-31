@@ -7,7 +7,7 @@ import { useGlobalContext } from "@/app/Context/store";
 import { HomeLink } from "@/app/commons";
 
 export default function AccountLogin () {
-    const { setMessage, authenticated } = useGlobalContext();
+    const { setNotification, authenticated } = useGlobalContext();
     const [localUsername, setLocalUsername] = useState<string>("");
     const [localPassword, setLocalPassword] = useState<string>("");
 
@@ -28,12 +28,15 @@ export default function AccountLogin () {
             withCredentials: true
         })
             .then((response) => {
-                setMessage("Logged in!");
+                setNotification("Logged in!");
                 const token = response.data.access;
                 const refreshToken = response.data.refresh;
                 localStorage.setItem("token", token);
                 localStorage.setItem("refreshToken", refreshToken);
                 location.href = "/account";
+            })
+            .catch(() => {
+                setNotification("Invalid login!");
             });
     };
 

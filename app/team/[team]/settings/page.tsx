@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function TeamSettings ({ params }: { params: { team: string } }) {
-	const { user, authenticated } = useGlobalContext();
+	const { setPopup, setNotification, user, authenticated } = useGlobalContext();
     const [team, setTeam] = useState<any>(null);
     const [name, setName] = useState<string>("");
     const [logo, setLogo] = useState<any>(null);
@@ -61,17 +61,23 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
     }
 
     const handleDelete = () => {
-        axios({
-            method: 'delete',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/delete/",
-            withCredentials: true
-        }).then(response => {
-            location.href = "/account";
-        })
+        setPopup({text: "Are you sure you want to disband this team?", buttons: [{text: "Yes", action: () => {
+            axios({
+                method: 'delete',
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/delete/",
+                withCredentials: true
+            }).then(response => {
+                setPopup({text: "Team disbanded", buttons: [{text: "OK", action: () => {
+                    location.href = "/account";
+                }
+                }], default: null});
+            })
+        }}], default: "No"});
     }
 
     const handleChangeData = () => {
         if(!checkTagInName()||!checkTagLength()) {
+            setNotification("Invalid tag: must be "+maxTagLength+" characters included in the name or less.");
             return;
         }
         axios({
@@ -83,21 +89,31 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
                 tag: tag
             }
         }).then(response => {
+            setNotification("Name and tag updated!");
             location.reload();
         })
+        .catch((error) => {
+            setNotification("Invalid name or tag change: "+error.response.data);
+        });
     }
 
     const handleTransferOwnership = (player: string) => {
-        axios({
-            method: 'put',
-            url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/transferownership/",
-            withCredentials: true,
-            data: {
-                newOwner: player
-            }
-        }).then(response => {
-            location.reload();
-        })
+        setPopup({text: "Are you sure you want to transfer ownership to this player?", buttons: [{text: "Yes", action: () => {
+            axios({
+                method: 'put',
+                url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/transferownership/",
+                withCredentials: true,
+                data: {
+                    newOwner: player
+                }
+            }).then(response => {
+                setNotification("Ownership transferred.");
+                location.reload();
+            })
+            .catch((error) => {
+                setNotification("Invalid transfer: "+error.response.data);
+            });
+        }}], default: "No"});
     }
    
     const handleKick = (player: string) => {
@@ -106,8 +122,12 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/players/"+player+"/delete/",
             withCredentials: true,
         }).then(response => {
+            setNotification("Player kicked.");
             location.reload();
         })
+        .catch((error) => {
+            setNotification("Invalid kick: "+error.response.data);
+        });
     }
 
     const handleLogoSet = (e: any) => {
@@ -132,9 +152,12 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             withCredentials: true,
             data: formData
         }).then(response => {
+            setNotification("Logo uploaded.");
             location.reload();
-        }
-        )
+        })
+        .catch((error) => {
+            setNotification("Invalid logo upload: "+error.response.data);
+        });
     }
 
     const handleLogoDelete = () => {
@@ -143,6 +166,7 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             url: process.env.NEXT_PUBLIC_BACKEND_ENDPOINT+"/teams/"+team.id+"/modify/logo/",
             withCredentials: true
         }).then(response => {
+            setNotification("Logo deleted.");
             location.reload();
         })
     }

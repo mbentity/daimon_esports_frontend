@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function AccountInbox () {
-    const { authenticated } = useGlobalContext();
+    const { setNotification, authenticated } = useGlobalContext();
     const [requests, setRequests] = useState<any>(null);
     const [outgoingRequests, setOutgoingRequests] = useState<any>(null);
     const [teamFilter, setTeamFilter] = useState<any>(null);
@@ -54,6 +54,7 @@ export default function AccountInbox () {
             withCredentials: true
         })
             .then(() => {
+                setNotification("Request accepted!");
                 location.reload();
             });
     }
@@ -65,6 +66,7 @@ export default function AccountInbox () {
             withCredentials: true
         })
             .then(() => {
+                setNotification("Request deleted.");
                 location.reload();
             });
     }
