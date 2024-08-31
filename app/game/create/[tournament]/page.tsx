@@ -31,7 +31,7 @@ export default function GameCreate ({ params }: { params: { tournament: string }
                     location.href = "/tournament/"+params.tournament;
                 }
             });
-    }, [user]);
+    }, [user, params.tournament]);
 
     const handlePost = () => {
         const data = {

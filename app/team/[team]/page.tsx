@@ -5,6 +5,7 @@ import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function TeamPage ({ params }: { params: { team: string } }) {
 	const { setNotification, setPopup, user } = useGlobalContext();
@@ -38,7 +39,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
                         setCanJoin(false);
                     })
             })
-    }, [user]);
+    }, [user, params.team]);
 
     useEffect(() => {
         if(user && team) {
@@ -101,7 +102,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         <div>
             <h1>{team?.name}</h1>
             {games&&<GameTimeline games={games} highlighted=""/>}
-            <img className="logo" src={team?.logo} alt={team?.name}/>
+            <Image className="logo" src={team?.logo} alt={team?.name}/>
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>
                 <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>

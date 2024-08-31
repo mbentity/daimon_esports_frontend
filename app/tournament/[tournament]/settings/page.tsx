@@ -61,7 +61,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 setDisciplines(res.data);
             }
         );
-    }, [user, nameChange, disciplineChange, streamingPlatformChange, meetingPlatformChange, timesChange]);
+    }, [user, nameChange, disciplineChange, streamingPlatformChange, meetingPlatformChange, timesChange, params.tournament]);
 
     const handleChangeName = () => {
         axios({
@@ -244,7 +244,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 <p>Games</p>
                 <Link href={"/game/create/"+params.tournament}><button>Create Game</button></Link>
                 <ul>
-                    {tournament?.games.map((game: any) => <Link href={"/game/"+game.id}><div key={game.id} className="cardobject">
+                    {tournament?.games.map((game: any) => <Link key={game.id} href={"/game/"+game.id}><div className="cardobject">
                         <p>{game.team1.tag} vs {game.team2.tag}</p>
                         <p>{game.score1} - {game.score2}</p>
                         <p>{formatDate(game.timestamp)}</p>
@@ -259,7 +259,7 @@ export default function TournamentSettings ({ params }: { params: { tournament: 
                 <p>Teams</p>
                 {tournament?.teams.length===0&&<p className="text">No teams</p>}
                 <ul>
-                    {tournament?.teams.map((team: any) => <Link href={"/team/"+team.id}><div key={team.id} className="cardobject">
+                    {tournament?.teams.map((team: any) => <Link key={team.id} href={"/team/"+team.id}><div className="cardobject">
                         <p>{team.name} ({team.tag})</p>
                         <ul>
                             {team.players.map((player: any) => <li key={player.id}>{player.user.name}</li>)}

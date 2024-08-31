@@ -4,7 +4,7 @@ import { HomeLink, formatDate, StreamIframe } from "@/app/commons";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Stream } from "stream";
+import Image from "next/image";
 
 export default function GamePage ({ params }: { params: { game: string } }) {
     const [game, setGame] = useState<any>(null);
@@ -18,7 +18,7 @@ export default function GamePage ({ params }: { params: { game: string } }) {
             .then(response => {
                 setGame(response.data);
             })
-    }, []);
+    }, [params.game]);
 
     const checkGameInProgress = (game: any) => {
         if(new Date(game.timestamp).getTime()+game.minutes*60000>new Date().getTime()) {
@@ -33,13 +33,13 @@ export default function GamePage ({ params }: { params: { game: string } }) {
         return (
             <div className="card versus">
                 {team1.logo&&<Link href={"/team/"+team1.id}>
-                <img className="team" src={team1.logo} alt={team1.name}/>
+                <Image className="team" src={team1.logo} alt={team1.name}/>
                 </Link>}
                 {!team1.logo&&<Link href={"/team/"+team1.id}>
                 <p className="team">{team1.tag}</p>
                 </Link>}
                 <p className="vs">vs</p>
-                {team2.logo&&<img className="team" src={team2.logo} alt={team2.name}/>}
+                {team2.logo&&<Image className="team" src={team2.logo} alt={team2.name}/>}
                 {!team2.logo&&<p className="team">{team2.tag}</p>}
             </div>
         );

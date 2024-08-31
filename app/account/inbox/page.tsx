@@ -108,7 +108,7 @@ export default function AccountInbox () {
                 return (
                     <div key={request.id} className="card">
                         <h2>{request.receiver.name}</h2>
-                        <p>You have requested to join {request.receiver.name}'s team: {request.team.name}.</p>
+                        <p>You have requested to join the team of {request.receiver.name}: {request.team.name}.</p>
                         <button onClick={() => handleDelete(request)}>Cancel</button>
                     </div>
                 );

@@ -50,7 +50,7 @@ export default function GameSettings ({ params }: { params: { game: string } }) 
                         setTournament(response.data);
                     });
             });
-    }, [teamsChange, scoreChange, timeChange, minutesChange]);
+    }, [teamsChange, scoreChange, timeChange, minutesChange, params.game]);
 
     const handleChangeTeams = () => {
         axios({

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useGlobalContext } from "./Context/store";
@@ -8,7 +9,7 @@ import { useGlobalContext } from "./Context/store";
 export const HomeLink = () => {
     return (
         <Link className="homelink" title="Return to Home" href="/">
-            <img src="/logo_nobg_squared.png" alt="logo" />
+            <Image src="/logo_nobg_squared.png" alt="logo" />
         </Link>
     );
 }
@@ -38,7 +39,7 @@ export const AuthHandler = ({children}:{children: React.ReactNode}) => {
         else {
             setAuthenticated(false);
         }
-    }, [authenticated]);
+    }, [authenticated, setAuthenticated, setUser]);
 
     return <>{children}</>;
 }
@@ -83,7 +84,7 @@ export const GameViewer = ({games}:{games: any}) => {
         else setHighlightedGame(games[0]);
 
         console.log(highlightedGame);
-    }, [games]);
+    }, [games, highlightedGame]);
 
     const checkGameInProgress = (game: any) => {
         const startTimestamp = new Date(game.timestamp).getTime();
@@ -175,22 +176,20 @@ export const formatDate = (date: string) => {
 
 export const Notification = () => {
     const { notification, setNotification } = useGlobalContext();
+
     useEffect(() => {
         if(notification) {
-            show();
+            const x = document.getElementById(`notification`)
+            if(x)
+            {
+                x.className = `show`
+                setTimeout(() => {
+                    x.className = x.className.replace(`show`, ``)
+                    setNotification("");
+                }, 3000)
+            }
         }
-    }, [notification]);
-    const show = () => {
-        const x = document.getElementById(`notification`)
-		if(x)
-		{
-			x.className = `show`
-			setTimeout(() => {
-				x.className = x.className.replace(`show`, ``)
-                setNotification("");
-			}, 3000)
-		}
-    }
+    }, [notification, setNotification]);
     return <div id='notification'>
         {notification}
     </div>

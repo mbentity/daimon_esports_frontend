@@ -15,7 +15,7 @@ export default function AccountLogin () {
         if(authenticated) {
             location.href = "/account";
         }
-    }, []);
+    }, [authenticated]);
 
     const handleLocalLogin = () => {
         axios({

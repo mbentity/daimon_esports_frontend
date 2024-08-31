@@ -40,7 +40,7 @@ export default function TeamCreate ({ params }: { params: { tournament: string }
             })
             .catch(err => {
             });
-    }, [user]);
+    }, [user, params.tournament]);
 
     const checkTagInName = () => {
         let nameLower = name.toLowerCase();

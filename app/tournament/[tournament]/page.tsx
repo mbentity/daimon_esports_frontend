@@ -1,10 +1,11 @@
 "use client"
 
-import { formatDate, HomeLink, GameViewer, StreamIframe } from "@/app/commons";
+import { formatDate, HomeLink, GameViewer } from "@/app/commons";
 import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function TournamentPage ({ params }: { params: { tournament: string } }) {
 	const { user, authenticated } = useGlobalContext();
@@ -39,7 +40,7 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                 console.log(error);
                 setCanCreate(false);
             })
-    }, [user]);
+    }, [user, params.tournament]);
 
     const calculateStandings = (matches: any, teams: any) => {
         let standings: any = [];
@@ -89,7 +90,7 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                         return (
                             <div className="cardobject" key={standing.team}>
                                 <Link href={"/team/"+tournament?.teams.find((team: any) => team.id===standing.team).id}>
-                                    {tournament?.teams.find((team: any) => team.id===standing.team).logo&&<img className="team" src={tournament?.teams.find((team: any) => team.id===standing.team).logo} alt={tournament?.teams.find((team: any) => team.id===standing.team).name}/>}
+                                    {tournament?.teams.find((team: any) => team.id===standing.team).logo&&<Image className="team" src={tournament?.teams.find((team: any) => team.id===standing.team).logo} alt={tournament?.teams.find((team: any) => team.id===standing.team).name}/>}
                                     <p className="gamelink">{tournament?.teams.find((team: any) => team.id===standing.team).name}</p>
                                 </Link>
                                 <p>&emsp;{standing.wins} - {standing.losses}</p>
