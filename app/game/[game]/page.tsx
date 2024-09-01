@@ -4,7 +4,6 @@ import { HomeLink, formatDate, StreamIframe } from "@/app/commons";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 export default function GamePage ({ params }: { params: { game: string } }) {
     const [game, setGame] = useState<any>(null);

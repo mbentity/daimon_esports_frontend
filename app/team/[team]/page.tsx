@@ -5,7 +5,6 @@ import { useGlobalContext } from "@/app/Context/store";
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 export default function TeamPage ({ params }: { params: { team: string } }) {
 	const { setNotification, setPopup, user } = useGlobalContext();
