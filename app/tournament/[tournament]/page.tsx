@@ -90,7 +90,7 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                         return (
                             <div className="cardobject" key={standing.team}>
                                 <Link href={"/team/"+tournament?.teams.find((team: any) => team.id===standing.team).id}>
-                                    {tournament?.teams.find((team: any) => team.id===standing.team).logo&&<Image className="team" src={tournament?.teams.find((team: any) => team.id===standing.team).logo} alt={tournament?.teams.find((team: any) => team.id===standing.team).name}/>}
+                                    {tournament?.teams.find((team: any) => team.id===standing.team).logo&&<img className="team" src={tournament?.teams.find((team: any) => team.id===standing.team).logo} alt={tournament?.teams.find((team: any) => team.id===standing.team).name}/>}
                                     <p className="gamelink">{tournament?.teams.find((team: any) => team.id===standing.team).name}</p>
                                 </Link>
                                 <p>&emsp;{standing.wins} - {standing.losses}</p>

@@ -199,8 +199,8 @@ export default function TeamSettings ({ params }: { params: { team: string } }) 
             </div>
             <div className="card">
                 <p>Logo</p>
-                {!logo&&team?.logo&&<Image src={team.logo} alt="Team logo"/>}
-                {logo&&<><Image src={URL.createObjectURL(logo)} alt="Team logo"/>
+                {!logo&&team?.logo&&<img src={team.logo} alt="Team logo"/>}
+                {logo&&<><img src={URL.createObjectURL(logo)} alt="Team logo"/>
                 {logo!==null||team?.logo&&<button onClick={handleLogoDelete}>Delete</button>}
                 <button onClick={handleLogoCancel}>Cancel</button>
                 <button onClick={handleLogoUpload}>Save</button>

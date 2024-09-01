@@ -33,13 +33,13 @@ export default function GamePage ({ params }: { params: { game: string } }) {
         return (
             <div className="card versus">
                 {team1.logo&&<Link href={"/team/"+team1.id}>
-                <Image className="team" src={team1.logo} alt={team1.name}/>
+                <img className="team" src={team1.logo} alt={team1.name}/>
                 </Link>}
                 {!team1.logo&&<Link href={"/team/"+team1.id}>
                 <p className="team">{team1.tag}</p>
                 </Link>}
                 <p className="vs">vs</p>
-                {team2.logo&&<Image className="team" src={team2.logo} alt={team2.name}/>}
+                {team2.logo&&<img className="team" src={team2.logo} alt={team2.name}/>}
                 {!team2.logo&&<p className="team">{team2.tag}</p>}
             </div>
         );

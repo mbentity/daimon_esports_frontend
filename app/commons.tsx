@@ -9,7 +9,7 @@ import { useGlobalContext } from "./Context/store";
 export const HomeLink = () => {
     return (
         <Link className="homelink" title="Return to Home" href="/">
-            <Image src="/logo_nobg_squared.png" alt="logo" />
+            <img src="/logo_nobg_squared.png" alt="logo" />
         </Link>
     );
 }

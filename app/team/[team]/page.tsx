@@ -102,7 +102,7 @@ export default function TeamPage ({ params }: { params: { team: string } }) {
         <div>
             <h1>{team?.name}</h1>
             {games&&<GameTimeline games={games} highlighted=""/>}
-            <Image className="logo" src={team?.logo} alt={team?.name}/>
+            <img className="logo" src={team?.logo} alt={team?.name}/>
             <div className="card">
                 <p>Owner: {team?.user?.name}</p>
                 <p>Tournament: <Link href={"/tournament/"+team?.tournament?.id}>{team?.tournament?.name}</Link></p>
