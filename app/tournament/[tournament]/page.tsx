@@ -106,8 +106,8 @@ export default function TournamentPage ({ params }: { params: { tournament: stri
                 <p>Subscriptions open: {formatDate(tournament?.sub_start)}</p>
                 <p>Subscriptions close: {formatDate(tournament?.sub_stop)}</p>
                 <p>Format: {tournament?.team_count} teams of {tournament?.player_count} players each</p>
-                <Link href={tournament?.streaming_platform}><p>Streaming</p></Link>
-                {!canCreate && <Link href={tournament.meeting_platform}><p>Meeting</p></Link>}
+                {tournament&&<Link href={tournament?.streaming_platform}><p>Streaming</p></Link>}
+                {tournament && !canCreate && <Link href={tournament?.meeting_platform}><p>Meeting</p></Link>}
                 {canCreate && <Link href={"/team/create/"+params.tournament}><button>Create team</button></Link>}
                 {isOrganizer && <Link href={"/tournament/"+params.tournament+"/settings"}><button>Tournament Settings</button></Link>}
             </div>

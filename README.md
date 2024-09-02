@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Daimon Esports
 
-First, run the development server:
+La seguente tesi descrive e sostiene lo sviluppo di Daimon Esports, un portale web dedicato alla creazione e gestione di competizioni esports principalmente amatoriali, senza escludere tuttavia potenziali applicazioni ufficiali.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![[Pasted image 20240831230240.png]]
+_Schermata principale della piattaforma._
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Requisiti di Installazione
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Connessione a internet
+- Dispositivo locale Linux, Windows o MAC
+- Git
+- Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Installazione Backend
 
-## Learn More
+- git clone https://github.com/mbentity/daimon_esports
+- docker build -t daimon_esports daimon_esports
+- docker run -p 3000:3000 daimon_esports
 
-To learn more about Next.js, take a look at the following resources:
+# Installazione Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- git clone https://github.com/mbentity/daimon_esports_frontend
+- docker build -t daimon_esports_frontend daimon_esports_frontend
+- docker run -p 3000:3000 daimon_esports_frontend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# Accesso
 
-## Deploy on Vercel
+- in caso di necessità di effettuare test, è presente un account admin:
+	- username: techweb
+	- password: techweb
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Consegna
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Come riportato dalla mail di proposta del progetto:
+"Applicazione Web per l'organizzazione, partecipazione e visione di tornei esports.
+Pensata per essere utilizzabile da utenti anonimi e registrati:
+- gli utenti anonimi possono consultare le classifiche di tutti i tornei, e sintonizzarsi sui canali di trasmissione delle partite attualmente in corso
+- gli utenti registrati possono iscriversi a tornei, creando delle squadre o richiedendo di unirsi a squadre esistenti
+- gli utenti registrati possono ricevere l'autorizzazione di organizzare tornei, specificando la disciplina, la piattaforma di ritrovo, il canale di trasmissione e le date di svolgimento
+Il sistema deve consentire la ricerca di tornei in base a criteri come disciplina, data di inizio e disponibilità delle iscrizioni.
+Il sistema deve gestire autonomamente i posti disponibili per ogni squadra e per ogni torneo, e permettere una basilare comunicazione tra utenti per inviare e approvare richieste di squadra.
+Ogni azione deve essere modificabile e reversibile: gli organizzatori devono poter modificare o cancellare un torneo, i capi squadra devono poter modificare o sciogliere una squadra e i giocatori devono poter abbandonare una squadra, e di conseguenza il torneo."
+
+# Struttura
+
+Il progetto è suddiviso in tre parti:
+
+- Tesi di presentazione
+- Frontend: applicativo multipage in NextJS (Node, Typescript)
+- Backend: API in Django Rest Framework (Django, Python)
+
+Frontend e Backend sono dockerizzati, come desumibile dal processo di installazione, e devono essere eseguiti entrambi per il corretto funzionamento della piattaforma.
+Le immagini Docker sono state costruite basandosi su Alpine, una distribuzione Linux leggera ed efficiente.
+Una volta buildate e eseguite entrambe le immagini, il portale è raggiungibile in locale su http://localhost:3000, mentre la piattaforma admin è raggiungibile, sempre in locale, su http://localhost:8000/admin.
+
+# Strumenti
+
+Frontend e Backend sono stati sviluppati con Visual Studio Code come IDE di preferenza.
+La tesi è stata scritta su Obsidian.md e compattata in PDF tramite Pandoc.
