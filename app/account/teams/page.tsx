@@ -26,7 +26,7 @@ export default function AccountTeams () {
                 setTeams(res.data);
             }
         );
-    }, []);
+    }, [authenticated]);
 
     return (
         <div>

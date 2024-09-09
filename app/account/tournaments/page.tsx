@@ -27,7 +27,7 @@ export default function AccountTournaments () {
             })
             .catch((err) => {
             });
-    }, []);
+    }, [authenticated]);
 
     return (
         <div>

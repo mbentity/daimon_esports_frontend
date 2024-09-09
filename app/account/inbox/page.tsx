@@ -44,7 +44,7 @@ export default function AccountInbox () {
             })
             .catch((err) => {
             });
-    }, []);
+    }, [authenticated]);
            
 
     const handleAccept = (request: any) => {

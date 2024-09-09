@@ -42,7 +42,7 @@ export default function Account () {
             })
             .catch(() => {
             });
-    }, [nameChange, usernameChange, passwordChange]);
+    }, [nameChange, usernameChange, passwordChange, authenticated]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
