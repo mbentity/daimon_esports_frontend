@@ -54,6 +54,8 @@ export const GameFetcher = () => {
             .then(response => {
                 setGames(response.data);
             })
+            .catch(error => {
+            });
     }, []);
 
     return <GameViewer games={games}/>
@@ -81,8 +83,6 @@ export const GameViewer = ({games}:{games: any}) => {
         else if(nextGame) setHighlightedGame(nextGame);
         else if(lastGame) setHighlightedGame(lastGame);
         else setHighlightedGame(games[0]);
-
-        console.log(highlightedGame);
     }, [games, highlightedGame]);
 
     const checkGameInProgress = (game: any) => {
